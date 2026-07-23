@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light">
+  <meta name="robots" content="index, follow">
+  <title>Sunly — sprawdź szansę na słońce zanim wybierzesz termin wakacji</title>
+  <meta name="description" content="Darmowa aplikacja Android. Szansa na słońce w danym miejscu i miesiącu na podstawie 10 lat danych AEMET — Kanary, Baleary i wybrzeże Hiszpanii.">
+  <meta property="og:title" content="Sunly — szansa na słońce na Twoje wakacje">
+  <meta property="og:description" content="Darmowa aplikacja Android: statystyczna szansa na słońce z 10 lat danych AEMET. Kanary, Baleary, wybrzeże Hiszpanii.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://app.sunly.live">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          "primary": "#0052D4", "on-primary": "#ffffff",
+          "primary-soft": "#E7EFFC",
+          "sun": "#FBBF24", "sun-strong": "#F59E0B",
+          "background": "#F4F8FE", "surface": "#ffffff",
+          "ink": "#0F2540", "muted": "#5B6B82",
+          "line": "#E2E9F3", "line-soft": "#EEF2F8",
+          "surface-soft": "#F5F8FD"
+        },
+        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        spacing: {
+          "stack-sm": "8px", "stack-md": "16px", "stack-lg": "32px", "stack-xl": "64px",
+          "gutter": "24px", "margin-mobile": "20px", "margin-desktop": "64px", "container-max": "1200px"
+        },
+        fontFamily: { "headline": ["Manrope"], "body": ["Manrope"], "label": ["Manrope"] }
+      } }
+    }
+  </script>
+  <style>
+    body { font-family: Manrope, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(175deg, #E4EEFB, #CFDFF4 60%, #C6DAF2); background-attachment: fixed; min-height: 100vh; }
+    .glass-header { backdrop-filter: blur(20px); background-color: rgba(244, 248, 254, 0.85); }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .lang-node { display: none; }
+    .lang-node.lang-active { display: revert; }
+  </style>
+</head>
+<body class="text-ink">
+
+  <!-- Global SVG defs — logo Sunly (spójne z projektem sunly-saas) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+    <linearGradient id="sunlyLogoSun" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD700"/><stop offset="1" stop-color="#FF8C00"/></linearGradient>
+    <radialGradient id="sunlyLogoSky" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#0052D4"/><stop offset="1" stop-color="#003EA6"/></radialGradient>
+    <clipPath id="sunlyLogoTile"><rect width="100" height="100" rx="22"/></clipPath>
+  </defs></svg>
+
+  <!-- 1. Sticky Header -->
+  <header class="fixed top-0 w-full z-50 glass-header border-b border-line">
+    <nav class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <div class="flex items-center gap-2 font-extrabold text-xl text-primary">
+        <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
+          <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/><circle cx="50" cy="40" r="24" fill="url(#sunlyLogoSun)"/>
+          <path clip-path="url(#sunlyLogoTile)" d="M0 84 C 18 82, 22 74, 30 74 C 38 74, 42 82, 50 82 C 58 82, 62 74, 70 74 C 78 74, 82 82, 100 84 L 100 100 L 0 100 Z" fill="#fff"/>
+        </svg><span>Sunly</span>
+      </div>
+      <div class="flex items-center gap-stack-md">
+        <div class="flex gap-4 items-center">
+          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="EN" aria-pressed="true" onclick="setLang('EN')">EN</button>
+          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="ES" aria-pressed="false" onclick="setLang('ES')">ES</button>
+          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="PL" aria-pressed="false" onclick="setLang('PL')">PL</button>
+          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="DE" aria-pressed="false" onclick="setLang('DE')">DE</button>
+        </div>
+        <span class="material-symbols-outlined text-primary" aria-hidden="true">language</span>
+      </div>
+    </nav>
+  </header>
+
+  <main class="pt-16">
+    <!-- 2. Hero -->
+    <section class="relative min-h-[520px] flex items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0" aria-hidden="true">
+        <svg class="w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4EEFB"/><stop offset="1" stop-color="#CFDFF4"/></linearGradient>
+            <radialGradient id="glow"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.55"/><stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/></radialGradient>
+            <radialGradient id="sunfill" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#FDE68A"/><stop offset="0.6" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></radialGradient>
+          </defs>
+          <rect width="1000" height="600" fill="url(#sky)"/>
+          <circle cx="500" cy="230" r="240" fill="url(#glow)"><animate attributeName="opacity" dur="4s" repeatCount="indefinite" values="0.5;0.75;0.5"/></circle>
+          <circle cx="500" cy="230" r="96" fill="url(#sunfill)"/>
+          <path d="M0 470 Q 250 430 500 470 T 1000 470 V600 H0 Z" fill="#BFD6F2" opacity="0.7"/>
+          <path d="M0 510 Q 250 475 500 510 T 1000 510 V600 H0 Z" fill="#A9C6ED"/>
+        </svg>
+      </div>
+      <div class="relative z-10 text-center px-margin-mobile">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-ink mb-stack-md tracking-tight">
+          <span class="lang-node lang-active" data-key="hero_title_en">Know your chance of sunshine before you book</span>
+          <span class="lang-node" data-key="hero_title_es">Conoce tu probabilidad de sol antes de reservar</span>
+          <span class="lang-node" data-key="hero_title_pl">Poznaj swoją szansę na słońce, zanim zarezerwujesz</span>
+          <span class="lang-node" data-key="hero_title_de">Kenne deine Sonnenchance, bevor du buchst</span>
+        </h1>
+        <p class="text-xl md:text-2xl text-muted max-w-2xl mx-auto">
+          <span class="lang-node lang-active" data-key="hero_sub_en">Sunly shows the statistical chance of sun for your destination and month — from 10 years of official AEMET weather data.</span>
+          <span class="lang-node" data-key="hero_sub_es">Sunly muestra la probabilidad estadística de sol para tu destino y mes — con 10 años de datos oficiales de AEMET.</span>
+          <span class="lang-node" data-key="hero_sub_pl">Sunly pokazuje statystyczną szansę na słońce dla Twojego miejsca i miesiąca — na podstawie 10 lat oficjalnych danych AEMET.</span>
+          <span class="lang-node" data-key="hero_sub_de">Sunly zeigt die statistische Sonnenchance für dein Ziel und deinen Monat — aus 10 Jahren offizieller AEMET-Wetterdaten.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 3. Intro & Trust Chips -->
+    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
+      <div class="flex-1">
+        <p class="text-sun-strong font-bold text-sm uppercase tracking-widest mb-stack-sm">
+          <span class="lang-node lang-active" data-key="meta_line_en">Free Android app · 10 years of AEMET data · Canary Islands, Balearic Islands, Spanish coast</span>
+          <span class="lang-node" data-key="meta_line_es">App Android gratuita · 10 años de datos AEMET · Islas Canarias, Islas Baleares, costa española</span>
+          <span class="lang-node" data-key="meta_line_pl">Darmowa aplikacja Android · 10 lat danych AEMET · Wyspy Kanaryjskie, Baleary, wybrzeże Hiszpanii</span>
+          <span class="lang-node" data-key="meta_line_de">Kostenlose Android-App · 10 Jahre AEMET-Daten · Kanarische Inseln, Balearen, spanische Küste</span>
+        </p>
+        <h2 class="text-3xl md:text-4xl font-bold mb-stack-md">
+          <span class="lang-node lang-active" data-key="intro_heading_en">Not a forecast — statistical certainty</span>
+          <span class="lang-node" data-key="intro_heading_es">No es un pronóstico — certeza estadística</span>
+          <span class="lang-node" data-key="intro_heading_pl">To nie prognoza — to statystyczna pewność</span>
+          <span class="lang-node" data-key="intro_heading_de">Keine Vorhersage — statistische Gewissheit</span>
+        </h2>
+        <p class="text-muted text-lg max-w-2xl">
+          <span class="lang-node lang-active" data-key="intro_text_en">Weather apps forecast the weather for tomorrow, the day after, a few days ahead. Sunly answers a different question: in this place, in this month, how often has it actually been sunny over the last 10 years?</span>
+          <span class="lang-node" data-key="intro_text_es">Las apps del tiempo predicen el tiempo para mañana, pasado mañana, unos días próximos. Sunly responde a otra pregunta: en este lugar, en este mes, ¿con qué frecuencia ha hecho sol en los últimos 10 años?</span>
+          <span class="lang-node" data-key="intro_text_pl">Aplikacje pogodowe prognozują pogodę na jutro, pojutrze, kilka przyszłych dni. Sunly odpowiada na inne pytanie: w tym miejscu, w tym miesiącu, jak często realnie świeciło słońce przez ostatnie 10 lat?</span>
+          <span class="lang-node" data-key="intro_text_de">Wetter-Apps sagen das Wetter für morgen, übermorgen, ein paar kommende Tage voraus. Sunly beantwortet eine andere Frage: Wie oft war es an diesem Ort in diesem Monat in den letzten 10 Jahren wirklich sonnig?</span>
+        </p>
+        <div class="flex flex-wrap gap-4 mt-stack-lg">
+          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">block</span><span class="lang-node lang-active" data-key="chip_ads_en">No ads</span><span class="lang-node" data-key="chip_ads_es">Sin anuncios</span><span class="lang-node" data-key="chip_ads_pl">Bez reklam</span><span class="lang-node" data-key="chip_ads_de">Keine Werbung</span></span>
+          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">visibility_off</span><span class="lang-node lang-active" data-key="chip_track_en">No tracking</span><span class="lang-node" data-key="chip_track_es">Sin rastreo</span><span class="lang-node" data-key="chip_track_pl">Bez śledzenia</span><span class="lang-node" data-key="chip_track_de">Kein Tracking</span></span>
+          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">payments</span><span class="lang-node lang-active" data-key="chip_free_en">Free</span><span class="lang-node" data-key="chip_free_es">Gratis</span><span class="lang-node" data-key="chip_free_pl">Za darmo</span><span class="lang-node" data-key="chip_free_de">Kostenlos</span></span>
+          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">database</span><span class="lang-node lang-active" data-key="chip_data_en">10 years of AEMET data</span><span class="lang-node" data-key="chip_data_es">10 años de datos AEMET</span><span class="lang-node" data-key="chip_data_pl">10 lat danych AEMET</span><span class="lang-node" data-key="chip_data_de">10 Jahre AEMET-Daten</span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Screenshot Gallery -->
+    <section class="bg-surface border-y border-line py-stack-xl">
+      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+        <h3 class="text-2xl font-bold mb-stack-lg">
+          <span class="lang-node lang-active" data-key="gallery_title_en">See the app in action</span>
+          <span class="lang-node" data-key="gallery_title_es">Mira la app en acción</span>
+          <span class="lang-node" data-key="gallery_title_pl">Zobacz aplikację w akcji</span>
+          <span class="lang-node" data-key="gallery_title_de">Die App in Aktion</span>
+        </h3>
+        <div id="gallery" class="flex overflow-x-auto gap-stack-md no-scrollbar snap-x snap-mandatory -mx-3 px-3 py-3">
+          <img data-img="01-search" alt="Search — pick your destination" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/01-search.png">
+          <img data-img="02-regions" alt="Canary Islands, Balearics and the Spanish coast" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/02-regions.png">
+          <img data-img="03-result" alt="Sun chance and live weather" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/03-result.png">
+          <img data-img="04-stats" alt="Monthly statistics from 10 years of data" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/04-stats.png">
+          <img data-img="05-wind" alt="Wind details" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/05-wind.png">
+          <img data-img="06-rain" alt="Rain details" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/06-rain.png">
+        </div>
+        <p class="text-[12px] text-muted mt-3">
+          <span class="lang-node lang-active" data-key="gallery_note_en">Tap a screenshot to enlarge.</span>
+          <span class="lang-node" data-key="gallery_note_es">Toca una captura para ampliarla.</span>
+          <span class="lang-node" data-key="gallery_note_pl">Dotknij zrzut, aby powiększyć.</span>
+          <span class="lang-node" data-key="gallery_note_de">Tippe auf einen Screenshot zum Vergrößern.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- 5 & 7. Primary Card (tester sign-up) + Features -->
+    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-xl grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+      <!-- Primary: tester sign-up -->
+      <div id="tester-form-card" class="lg:col-span-8 bg-surface rounded-3xl p-6 md:p-8 border border-primary/30 shadow-sm flex flex-col justify-center">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+          <h3 class="text-2xl font-bold text-primary">
+            <span class="lang-node lang-active" data-key="card_title_en">Install safely via Google Play</span>
+            <span class="lang-node" data-key="card_title_es">Instálala de forma segura por Google Play</span>
+            <span class="lang-node" data-key="card_title_pl">Zainstaluj bezpiecznie przez Google Play</span>
+            <span class="lang-node" data-key="card_title_de">Sicher über Google Play installieren</span>
+          </h3>
+          <div class="bg-sun text-ink px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
+            <span class="lang-node lang-active" data-key="badge_en">Recommended</span><span class="lang-node" data-key="badge_es">Recomendado</span><span class="lang-node" data-key="badge_pl">Zalecane</span><span class="lang-node" data-key="badge_de">Empfohlen</span>
+          </div>
+        </div>
+        <p class="text-muted mb-6 max-w-lg text-sm leading-relaxed">
+          <span class="lang-node lang-active" data-key="card_body_en">Join the tester list and get Sunly straight from Google Play — no security warnings, automatic updates. Enter the Google (Gmail) address on your phone; I'll add you to the test and email you the install link.</span>
+          <span class="lang-node" data-key="card_body_es">Únete a la lista de testers y consigue Sunly directamente desde Google Play — sin avisos de seguridad y con actualizaciones automáticas. Indica la dirección de Google (Gmail) de tu móvil; te añadiré a la prueba y te enviaré el enlace.</span>
+          <span class="lang-node" data-key="card_body_pl">Zapisz się na listę testerów i pobierz Sunly wprost z Google Play — bez ostrzeżeń, z automatycznymi aktualizacjami. Podaj adres Google (Gmail) z telefonu; dodam Cię do testu i wyślę link instalacyjny e-mailem.</span>
+          <span class="lang-node" data-key="card_body_de">Trag dich in die Tester-Liste ein und hol dir Sunly direkt aus Google Play — ohne Sicherheitswarnungen, mit automatischen Updates. Gib die Google-(Gmail-)Adresse von deinem Handy an; ich füge dich zum Test hinzu und schicke dir den Installationslink per E-Mail.</span>
+        </p>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 mb-6">
+          <span class="flex items-center gap-2 text-sm font-bold text-primary">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">autorenew</span>
+            <span class="lang-node lang-active" data-key="benefit_upd_en">Automatic updates</span><span class="lang-node" data-key="benefit_upd_es">Actualizaciones automáticas</span><span class="lang-node" data-key="benefit_upd_pl">Automatyczne aktualizacje</span><span class="lang-node" data-key="benefit_upd_de">Automatische Updates</span>
+          </span>
+          <span class="flex items-center gap-2 text-sm font-bold text-primary">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">gpp_good</span>
+            <span class="lang-node lang-active" data-key="benefit_warn_en">No Android warnings</span><span class="lang-node" data-key="benefit_warn_es">Sin avisos de Android</span><span class="lang-node" data-key="benefit_warn_pl">Bez ostrzeżeń Androida</span><span class="lang-node" data-key="benefit_warn_de">Keine Android-Warnungen</span>
+          </span>
+        </div>
+        <form id="tester-form" class="w-full space-y-4" novalidate>
+          <input type="hidden" name="access_key" value="22400fe2-ea79-4000-9f1e-f0fe0b465f24">
+          <input type="hidden" name="subject" value="Nowy tester Sunly">
+          <input type="hidden" name="from_name" value="Sunly landing">
+          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input id="f-name" class="bg-surface-soft border border-line rounded-xl text-ink placeholder-muted focus:ring-primary focus:border-primary px-4 py-3 text-sm" name="name" autocomplete="name" type="text" placeholder="Your name (optional)">
+            <input id="f-email" class="bg-surface-soft border border-line rounded-xl text-ink placeholder-muted focus:ring-primary focus:border-primary px-4 py-3 text-sm" name="email" autocomplete="email" inputmode="email" required type="email" placeholder="Google / Gmail address">
+          </div>
+          <button type="submit" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">verified</span>
+            <span class="lang-node lang-active text-sm" data-key="btn_en">Join the test</span><span class="lang-node text-sm" data-key="btn_es">Unirme a la prueba</span><span class="lang-node text-sm" data-key="btn_pl">Zapisz się na test</span><span class="lang-node text-sm" data-key="btn_de">Am Test teilnehmen</span>
+          </button>
+          <p class="text-[12px] text-muted">
+            <span class="lang-node lang-active" data-key="note_en">Your email is used only to add you to the closed test. See the <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">privacy policy</a>.</span>
+            <span class="lang-node" data-key="note_es">Tu correo solo se usa para añadirte a la prueba cerrada. Consulta la <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">política de privacidad</a>.</span>
+            <span class="lang-node" data-key="note_pl">Adres e-mail służy wyłącznie do dodania Cię do testu zamkniętego. Zobacz <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">politykę prywatności</a>.</span>
+            <span class="lang-node" data-key="note_de">Deine E-Mail wird nur verwendet, um dich zum geschlossenen Test hinzuzufügen. Siehe die <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Datenschutzerklärung</a>.</span>
+          </p>
+        </form>
+        <div id="form-result" role="status" aria-live="polite" class="hidden mt-4 text-sm rounded-xl p-4 bg-surface-soft border border-line"></div>
+      </div>
+
+      <!-- Features -->
+      <div class="lg:col-span-4 bg-surface rounded-3xl p-8 border border-line shadow-sm">
+        <h4 class="text-sm font-bold uppercase tracking-widest text-primary mb-stack-md">
+          <span class="lang-node lang-active" data-key="feat_h_en">Key features</span><span class="lang-node" data-key="feat_h_es">Funciones clave</span><span class="lang-node" data-key="feat_h_pl">Kluczowe funkcje</span><span class="lang-node" data-key="feat_h_de">Wichtigste Funktionen</span>
+        </h4>
+        <ul class="space-y-6">
+          <li class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">wb_sunny</span>
+            <div>
+              <p class="font-bold"><span class="lang-node lang-active" data-key="f1t_en">Sun chance</span><span class="lang-node" data-key="f1t_es">Probabilidad de sol</span><span class="lang-node" data-key="f1t_pl">Szansa na słońce</span><span class="lang-node" data-key="f1t_de">Sonnenchance</span></p>
+              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f1d_en">The % of sunny days for your place and month, from 10 years of records.</span><span class="lang-node" data-key="f1d_es">El % de días soleados para tu lugar y mes, con 10 años de registros.</span><span class="lang-node" data-key="f1d_pl">Odsetek słonecznych dni dla Twojego miejsca i miesiąca, z 10 lat pomiarów.</span><span class="lang-node" data-key="f1d_de">Der %-Anteil sonniger Tage für Ort und Monat, aus 10 Jahren Aufzeichnungen.</span></p>
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">bar_chart</span>
+            <div>
+              <p class="font-bold"><span class="lang-node lang-active" data-key="f2t_en">Monthly stats</span><span class="lang-node" data-key="f2t_es">Estadísticas mensuales</span><span class="lang-node" data-key="f2t_pl">Statystyki miesięczne</span><span class="lang-node" data-key="f2t_de">Monatsstatistiken</span></p>
+              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f2d_en">Average highs and lows, rainy days, and 10-year temperature charts.</span><span class="lang-node" data-key="f2d_es">Máximas y mínimas medias, días de lluvia y gráficos de temperatura de 10 años.</span><span class="lang-node" data-key="f2d_pl">Średnie maks. i min., dni deszczowe oraz wykresy temperatur z 10 lat.</span><span class="lang-node" data-key="f2d_de">Durchschnittliche Höchst- und Tiefstwerte, Regentage und 10-Jahres-Temperaturdiagramme.</span></p>
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">bolt</span>
+            <div>
+              <p class="font-bold"><span class="lang-node lang-active" data-key="f3t_en">Live weather</span><span class="lang-node" data-key="f3t_es">Tiempo en directo</span><span class="lang-node" data-key="f3t_pl">Pogoda na żywo</span><span class="lang-node" data-key="f3t_de">Live-Wetter</span></p>
+              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f3d_en">Current conditions from the nearest weather station.</span><span class="lang-node" data-key="f3d_es">Condiciones actuales de la estación más cercana.</span><span class="lang-node" data-key="f3d_pl">Aktualne warunki z najbliższej stacji pogodowej.</span><span class="lang-node" data-key="f3d_de">Aktuelle Bedingungen von der nächstgelegenen Wetterstation.</span></p>
+            </div>
+          </li>
+          <li class="flex items-start gap-4">
+            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">location_on</span>
+            <div>
+              <p class="font-bold"><span class="lang-node lang-active" data-key="f4t_en">Wide coverage</span><span class="lang-node" data-key="f4t_es">Amplia cobertura</span><span class="lang-node" data-key="f4t_pl">Szeroki zasięg</span><span class="lang-node" data-key="f4t_de">Große Abdeckung</span></p>
+              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f4d_en">Canary Islands, Balearics and the Spanish Mediterranean coast.</span><span class="lang-node" data-key="f4d_es">Canarias, Baleares y la costa mediterránea española.</span><span class="lang-node" data-key="f4d_pl">Kanary, Baleary i hiszpańskie wybrzeże Morza Śródziemnego.</span><span class="lang-node" data-key="f4d_de">Kanaren, Balearen und die spanische Mittelmeerküste.</span></p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section class="max-w-3xl mx-auto px-margin-mobile py-stack-xl">
+      <h2 class="text-3xl font-bold mb-stack-lg text-center">
+        <span class="lang-node lang-active" data-key="faq_h_en">Frequently asked questions</span><span class="lang-node" data-key="faq_h_es">Preguntas frecuentes</span><span class="lang-node" data-key="faq_h_pl">Najczęstsze pytania</span><span class="lang-node" data-key="faq_h_de">Häufig gestellte Fragen</span>
+      </h2>
+      <div class="text-left space-y-gutter">
+        <div>
+          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q1_en">How do I become a tester?</span><span class="lang-node" data-key="q1_es">¿Cómo me hago tester?</span><span class="lang-node" data-key="q1_pl">Jak zostać testerem?</span><span class="lang-node" data-key="q1_de">Wie werde ich Tester?</span></h4>
+          <p class="text-muted"><span class="lang-node lang-active" data-key="a1_en">Enter the Gmail address from your Android phone in the form above. I'll add you to the closed test and email you the Google Play install link — usually within a day.</span><span class="lang-node" data-key="a1_es">Introduce arriba la dirección de Gmail de tu móvil Android. Te añadiré a la prueba cerrada y te enviaré el enlace de instalación de Google Play — normalmente en un día.</span><span class="lang-node" data-key="a1_pl">Wpisz w formularzu powyżej adres Gmail z Twojego telefonu z Androidem. Dodam Cię do testu zamkniętego i wyślę link instalacyjny z Google Play — zwykle w ciągu doby.</span><span class="lang-node" data-key="a1_de">Gib oben die Gmail-Adresse deines Android-Handys ein. Ich füge dich zum geschlossenen Test hinzu und schicke dir den Google-Play-Installationslink — meist innerhalb eines Tages.</span></p>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q2_en">What data does it collect?</span><span class="lang-node" data-key="q2_es">¿Qué datos recopila?</span><span class="lang-node" data-key="q2_pl">Jakie dane zbiera?</span><span class="lang-node" data-key="q2_de">Welche Daten werden erfasst?</span></h4>
+          <p class="text-muted"><span class="lang-node lang-active" data-key="a2_en">Nothing that identifies you. Your location is used only on request to find the nearest station. See the full privacy policy.</span><span class="lang-node" data-key="a2_es">Nada que te identifique. Tu ubicación se usa solo a petición para encontrar la estación más cercana. Consulta la política de privacidad.</span><span class="lang-node" data-key="a2_pl">Żadnych identyfikujących. Lokalizacja używana jest tylko na żądanie, by znaleźć najbliższą stację. Zobacz politykę prywatności.</span><span class="lang-node" data-key="a2_de">Nichts, was dich identifiziert. Dein Standort wird nur auf Anfrage verwendet, um die nächste Station zu finden. Siehe die Datenschutzerklärung.</span></p>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q3_en">Is it really free?</span><span class="lang-node" data-key="q3_es">¿Es realmente gratis?</span><span class="lang-node" data-key="q3_pl">Czy naprawdę za darmo?</span><span class="lang-node" data-key="q3_de">Ist es wirklich kostenlos?</span></h4>
+          <p class="text-muted"><span class="lang-node lang-active" data-key="a3_en">Yes — free, no ads, no account needed.</span><span class="lang-node" data-key="a3_es">Sí — gratis, sin anuncios, sin cuenta.</span><span class="lang-node" data-key="a3_pl">Tak — za darmo, bez reklam, bez konta.</span><span class="lang-node" data-key="a3_de">Ja — kostenlos, keine Werbung, kein Konto.</span></p>
+        </div>
+        <div>
+          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q4_en">Is it a weather forecast?</span><span class="lang-node" data-key="q4_es">¿Es un pronóstico del tiempo?</span><span class="lang-node" data-key="q4_pl">Czy to prognoza pogody?</span><span class="lang-node" data-key="q4_de">Ist das eine Wettervorhersage?</span></h4>
+          <p class="text-muted"><span class="lang-node lang-active" data-key="a4_en">No. Sunly shows historical statistics — how often it was sunny in the past — to help you plan. It also shows current live conditions, but it is not a forecast.</span><span class="lang-node" data-key="a4_es">No. Sunly muestra estadísticas históricas — con qué frecuencia hizo sol en el pasado — para ayudarte a planificar. También muestra condiciones actuales, pero no es un pronóstico.</span><span class="lang-node" data-key="a4_pl">Nie. Sunly pokazuje statystyki historyczne — jak często było słonecznie w przeszłości — by pomóc w planowaniu. Pokazuje też aktualne warunki na żywo, ale nie jest prognozą.</span><span class="lang-node" data-key="a4_de">Nein. Sunly zeigt historische Statistiken — wie oft es früher sonnig war — um dir bei der Planung zu helfen. Es zeigt auch aktuelle Live-Bedingungen, ist aber keine Vorhersage.</span></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-surface py-stack-xl border-t border-line">
+    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-stack-lg">
+      <div class="text-center md:text-left">
+        <div class="flex items-center justify-center md:justify-start gap-2 font-extrabold text-xl text-primary mb-2">
+          <svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">
+            <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/><circle cx="50" cy="40" r="24" fill="url(#sunlyLogoSun)"/>
+            <path clip-path="url(#sunlyLogoTile)" d="M0 84 C 18 82, 22 74, 30 74 C 38 74, 42 82, 50 82 C 58 82, 62 74, 70 74 C 78 74, 82 82, 100 84 L 100 100 L 0 100 Z" fill="#fff"/>
+          </svg><span>Sunly</span>
+        </div>
+        <p class="text-sm text-muted">© 2026 Sunly · Android · Data: AEMET (aemet.es) · Not affiliated with AEMET</p>
+      </div>
+      <div class="flex gap-6 text-sm font-medium">
+        <a class="hover:text-primary transition-colors" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Privacy</a>
+        <a class="hover:text-primary transition-colors" href="mailto:info@sunly.live">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Screenshot">
+    <button id="lightbox-close" aria-label="Close" class="absolute top-4 right-4 w-11 h-11 flex items-center justify-center rounded-full bg-surface text-ink hover:text-primary border border-line">
+      <span class="material-symbols-outlined" aria-hidden="true">close</span>
+    </button>
+    <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[95vw] w-auto rounded-2xl shadow-2xl">
+  </div>
+
+  <script>
+    var W3 = {
+      en: { namePh: "Your name (optional)", emailPh: "Google / Gmail address",
+            sending: "Sending…", ok: "Thanks! I'll add your email to the Google Play test and send the install link — usually within a day.",
+            err: "Something went wrong. Please email info@sunly.live instead." },
+      es: { namePh: "Tu nombre (opcional)", emailPh: "Dirección de Google / Gmail",
+            sending: "Enviando…", ok: "¡Gracias! Te añadiré a la prueba de Google Play y te enviaré el enlace — normalmente en un día.",
+            err: "Algo falló. Escríbeme a info@sunly.live." },
+      pl: { namePh: "Twoje imię (opcjonalnie)", emailPh: "Adres Google / Gmail",
+            sending: "Wysyłanie…", ok: "Dzięki! Dodam Cię do testu Google Play i wyślę link instalacyjny — zwykle w ciągu doby.",
+            err: "Coś poszło nie tak. Napisz na info@sunly.live." },
+      de: { namePh: "Dein Name (optional)", emailPh: "Google- / Gmail-Adresse",
+            sending: "Senden…", ok: "Danke! Ich füge deine E-Mail zum Google-Play-Test hinzu und schicke dir den Installationslink — meist innerhalb eines Tages.",
+            err: "Etwas ist schiefgelaufen. Bitte schreib stattdessen an info@sunly.live." }
+    };
+    var current = "EN";
+
+    function setLang(L) {
+      current = L;
+      var suffix = "_" + L.toLowerCase();
+      document.querySelectorAll(".lang-node").forEach(function (n) {
+        n.classList.toggle("lang-active", n.getAttribute("data-key").slice(-3) === suffix);
+      });
+      document.querySelectorAll(".lang-btn").forEach(function (b) {
+        var on = b.getAttribute("data-lang") === L;
+        b.setAttribute("aria-pressed", String(on));
+        b.classList.toggle("text-primary", on);
+        b.classList.toggle("font-bold", on);
+        b.classList.toggle("underline", on);
+        b.classList.toggle("underline-offset-4", on);
+      });
+      var lc = L.toLowerCase();
+      document.querySelectorAll("#gallery img[data-img]").forEach(function (img) {
+        var base = img.getAttribute("data-img");
+        img.onerror = function () { this.onerror = null; this.src = "screens/en/" + base + ".png"; };
+        img.src = "screens/" + lc + "/" + base + ".png";
+      });
+      var t = W3[L.toLowerCase()] || W3.en;
+      var ne = document.getElementById("f-name"); if (ne) ne.placeholder = t.namePh;
+      var ee = document.getElementById("f-email"); if (ee) ee.placeholder = t.emailPh;
+      document.documentElement.lang = L.toLowerCase();
+      try { localStorage.setItem("sunly_lang", L); } catch (e) {}
+    }
+
+    var saved; try { saved = localStorage.getItem("sunly_lang"); } catch (e) {}
+    var nav = (navigator.language || "en").slice(0, 2).toUpperCase();
+    setLang(saved || (["EN", "ES", "PL", "DE"].indexOf(nav) >= 0 ? nav : "EN"));
+
+    var form = document.getElementById("tester-form");
+    var result = document.getElementById("form-result");
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var t = W3[current.toLowerCase()] || W3.en;
+      result.classList.remove("hidden"); result.textContent = t.sending;
+      fetch("https://api.web3forms.com/submit", { method: "POST", body: new FormData(form) })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j.success) { form.style.display = "none"; result.classList.add("text-primary", "border-primary"); result.textContent = t.ok; }
+          else { result.textContent = t.err; }
+        })
+        .catch(function () { result.textContent = t.err; });
+    });
+
+    // Lightbox — click a screenshot to view it full-screen
+    (function () {
+      var lb = document.getElementById("lightbox");
+      var lbImg = document.getElementById("lightbox-img");
+      function openLb(src, alt) {
+        lbImg.src = src; lbImg.alt = alt || "";
+        lb.classList.remove("hidden"); lb.classList.add("flex");
+        document.body.style.overflow = "hidden";
+      }
+      function closeLb() {
+        lb.classList.add("hidden"); lb.classList.remove("flex");
+        document.body.style.overflow = ""; lbImg.src = "";
+      }
+      document.querySelectorAll("#gallery img").forEach(function (img) {
+        img.addEventListener("click", function () { openLb(img.src, img.alt); });
+      });
+      document.getElementById("lightbox-close").addEventListener("click", closeLb);
+      lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
+    })();
+  </script>
+
+  <!-- Analytics placeholder (optional): GoatCounter — cookieless. Replace with your own or remove.
+  <script data-goatcounter="https://REPLACE_GOATCOUNTER.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+  -->
+</body>
+</html>
