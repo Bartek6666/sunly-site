@@ -60,8 +60,12 @@
     <nav class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
       <div class="flex items-center gap-2 font-extrabold text-xl text-primary">
         <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
-          <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/><circle cx="50" cy="40" r="24" fill="url(#sunlyLogoSun)"/>
-          <path clip-path="url(#sunlyLogoTile)" d="M0 84 C 18 82, 22 74, 30 74 C 38 74, 42 82, 50 82 C 58 82, 62 74, 70 74 C 78 74, 82 82, 100 84 L 100 100 L 0 100 Z" fill="#fff"/>
+          <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/>
+          <circle cx="50" cy="43" r="21" fill="url(#sunlyLogoSun)"/>
+          <ellipse cx="44" cy="37" rx="5" ry="3.5" fill="#FFF9C4" opacity="0.45" transform="rotate(-20 44 37)"/>
+          <path clip-path="url(#sunlyLogoTile)" d="M0 80 C 15 78, 20 72, 25 72 L 28 78 C 40 76, 45 70, 50 70 L 53 78 C 65 76, 70 70, 75 70 L 78 78 C 90 76, 95 72, 100 72 L 100 100 L 0 100 Z" fill="#fff" opacity="0.28"/>
+          <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82 L 100 100 L 0 100 Z" fill="#fff"/>
+          <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82" fill="none" stroke="#A8D8F0" stroke-width="1" opacity="0.6"/>
         </svg><span>Sunly</span>
       </div>
       <div class="flex items-center gap-3 sm:gap-stack-md">
@@ -167,24 +171,24 @@
 
     <!-- 5 & 7. Primary Card (tester sign-up) + Features -->
     <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pt-stack-xl pb-stack-md md:py-stack-xl grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-      <!-- Primary: tester sign-up -->
-      <div id="tester-form-card" class="lg:col-span-8 bg-surface rounded-3xl p-6 md:p-8 border border-primary/30 shadow-sm flex flex-col justify-center">
+      <!-- Primary: download from Google Play -->
+      <div id="download-card" class="lg:col-span-8 bg-surface rounded-3xl p-6 md:p-8 border border-primary/30 shadow-sm flex flex-col justify-center">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
           <h3 class="text-2xl font-bold text-primary">
-            <span class="lang-node lang-active" data-key="card_title_en">Install safely via Google Play</span>
-            <span class="lang-node" data-key="card_title_es">Instálala de forma segura por Google Play</span>
-            <span class="lang-node" data-key="card_title_pl">Zainstaluj bezpiecznie przez Google Play</span>
-            <span class="lang-node" data-key="card_title_de">Sicher über Google Play installieren</span>
+            <span class="lang-node lang-active" data-key="card_title_en">Get Sunly on Google Play</span>
+            <span class="lang-node" data-key="card_title_es">Consigue Sunly en Google Play</span>
+            <span class="lang-node" data-key="card_title_pl">Pobierz Sunly z Google Play</span>
+            <span class="lang-node" data-key="card_title_de">Hol dir Sunly bei Google Play</span>
           </h3>
           <div class="bg-sun text-ink px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
-            <span class="lang-node lang-active" data-key="badge_en">Recommended</span><span class="lang-node" data-key="badge_es">Recomendado</span><span class="lang-node" data-key="badge_pl">Zalecane</span><span class="lang-node" data-key="badge_de">Empfohlen</span>
+            <span class="lang-node lang-active" data-key="badge_en">Free</span><span class="lang-node" data-key="badge_es">Gratis</span><span class="lang-node" data-key="badge_pl">Za darmo</span><span class="lang-node" data-key="badge_de">Kostenlos</span>
           </div>
         </div>
         <p class="text-muted mb-6 max-w-lg text-sm leading-relaxed">
-          <span class="lang-node lang-active" data-key="card_body_en">Join the tester list and get Sunly straight from Google Play — no security warnings, automatic updates. Enter the Google (Gmail) address on your phone; I'll add you to the test and email you the install link.</span>
-          <span class="lang-node" data-key="card_body_es">Únete a la lista de testers y consigue Sunly directamente desde Google Play — sin avisos de seguridad y con actualizaciones automáticas. Indica la dirección de Google (Gmail) de tu móvil; te añadiré a la prueba y te enviaré el enlace.</span>
-          <span class="lang-node" data-key="card_body_pl">Zapisz się na listę testerów i pobierz Sunly wprost z Google Play — bez ostrzeżeń, z automatycznymi aktualizacjami. Podaj adres Google (Gmail) z telefonu; dodam Cię do testu i wyślę link instalacyjny e-mailem.</span>
-          <span class="lang-node" data-key="card_body_de">Trag dich in die Tester-Liste ein und hol dir Sunly direkt aus Google Play — ohne Sicherheitswarnungen, mit automatischen Updates. Gib die Google-(Gmail-)Adresse von deinem Handy an; ich füge dich zum Test hinzu und schicke dir den Installationslink per E-Mail.</span>
+          <span class="lang-node lang-active" data-key="card_body_en">Free, no ads, no account. Install Sunly from Google Play and check the chance of sun for any destination and month in seconds.</span>
+          <span class="lang-node" data-key="card_body_es">Gratis, sin anuncios y sin cuenta. Instala Sunly desde Google Play y consulta la probabilidad de sol para cualquier destino y mes en segundos.</span>
+          <span class="lang-node" data-key="card_body_pl">Za darmo, bez reklam i bez konta. Zainstaluj Sunly z Google Play i sprawdź szansę na słońce dla dowolnego miejsca i miesiąca w kilka sekund.</span>
+          <span class="lang-node" data-key="card_body_de">Kostenlos, ohne Werbung, ohne Konto. Installiere Sunly aus Google Play und prüfe die Sonnenchance für jedes Ziel und jeden Monat in Sekunden.</span>
         </p>
         <div class="flex flex-wrap gap-x-5 gap-y-2 mb-6">
           <span class="flex items-center gap-2 text-sm font-bold text-primary">
@@ -193,30 +197,19 @@
           </span>
           <span class="flex items-center gap-2 text-sm font-bold text-primary">
             <span class="material-symbols-outlined text-[20px]" aria-hidden="true">gpp_good</span>
-            <span class="lang-node lang-active" data-key="benefit_warn_en">No Android warnings</span><span class="lang-node" data-key="benefit_warn_es">Sin avisos de Android</span><span class="lang-node" data-key="benefit_warn_pl">Bez ostrzeżeń Androida</span><span class="lang-node" data-key="benefit_warn_de">Keine Android-Warnungen</span>
+            <span class="lang-node lang-active" data-key="benefit_warn_en">Safe &amp; official</span><span class="lang-node" data-key="benefit_warn_es">Segura y oficial</span><span class="lang-node" data-key="benefit_warn_pl">Bezpieczna i oficjalna</span><span class="lang-node" data-key="benefit_warn_de">Sicher &amp; offiziell</span>
           </span>
         </div>
-        <form id="tester-form" class="w-full space-y-4" novalidate>
-          <input type="hidden" name="access_key" value="22400fe2-ea79-4000-9f1e-f0fe0b465f24">
-          <input type="hidden" name="subject" value="Nowy tester Sunly">
-          <input type="hidden" name="from_name" value="Sunly landing">
-          <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off">
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <input id="f-name" class="bg-surface-soft border border-line rounded-xl text-ink placeholder-muted focus:ring-primary focus:border-primary px-4 py-3 text-sm" name="name" autocomplete="name" type="text" placeholder="Your name (optional)">
-            <input id="f-email" class="bg-surface-soft border border-line rounded-xl text-ink placeholder-muted focus:ring-primary focus:border-primary px-4 py-3 text-sm" name="email" autocomplete="email" inputmode="email" required type="email" placeholder="Google / Gmail address">
-          </div>
-          <button type="submit" class="w-full bg-primary text-on-primary font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">verified</span>
-            <span class="lang-node lang-active text-sm" data-key="btn_en">Join the test</span><span class="lang-node text-sm" data-key="btn_es">Unirme a la prueba</span><span class="lang-node text-sm" data-key="btn_pl">Zapisz się na test</span><span class="lang-node text-sm" data-key="btn_de">Am Test teilnehmen</span>
-          </button>
-          <p class="text-[12px] text-muted">
-            <span class="lang-node lang-active" data-key="note_en">Your email is used only to add you to the closed test. See the <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">privacy policy</a>.</span>
-            <span class="lang-node" data-key="note_es">Tu correo solo se usa para añadirte a la prueba cerrada. Consulta la <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">política de privacidad</a>.</span>
-            <span class="lang-node" data-key="note_pl">Adres e-mail służy wyłącznie do dodania Cię do testu zamkniętego. Zobacz <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">politykę prywatności</a>.</span>
-            <span class="lang-node" data-key="note_de">Deine E-Mail wird nur verwendet, um dich zum geschlossenen Test hinzuzufügen. Siehe die <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Datenschutzerklärung</a>.</span>
-          </p>
-        </form>
-        <div id="form-result" role="status" aria-live="polite" class="hidden mt-4 text-sm rounded-xl p-4 bg-surface-soft border border-line"></div>
+        <a href="https://play.google.com/store/apps/details?id=com.canaryweather.app" target="_blank" rel="noopener" class="self-start bg-primary text-on-primary font-bold py-3.5 px-7 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 2.5v19l16-9.5z"/></svg>
+          <span class="lang-node lang-active text-sm" data-key="btn_en">Get it on Google Play</span><span class="lang-node text-sm" data-key="btn_es">Descargar en Google Play</span><span class="lang-node text-sm" data-key="btn_pl">Pobierz z Google Play</span><span class="lang-node text-sm" data-key="btn_de">Bei Google Play laden</span>
+        </a>
+        <p class="text-[12px] text-muted mt-4">
+          <span class="lang-node lang-active" data-key="note_en">iOS version coming soon. See the <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">privacy policy</a>.</span>
+          <span class="lang-node" data-key="note_es">Versión para iOS muy pronto. Consulta la <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">política de privacidad</a>.</span>
+          <span class="lang-node" data-key="note_pl">Wersja na iOS wkrótce. Zobacz <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">politykę prywatności</a>.</span>
+          <span class="lang-node" data-key="note_de">iOS-Version kommt bald. Siehe die <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Datenschutzerklärung</a>.</span>
+        </p>
       </div>
 
       <!-- Features -->
@@ -264,8 +257,8 @@
       </h2>
       <div class="text-left space-y-gutter">
         <div>
-          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q1_en">How do I become a tester?</span><span class="lang-node" data-key="q1_es">¿Cómo me hago tester?</span><span class="lang-node" data-key="q1_pl">Jak zostać testerem?</span><span class="lang-node" data-key="q1_de">Wie werde ich Tester?</span></h4>
-          <p class="text-muted"><span class="lang-node lang-active" data-key="a1_en">Enter the Gmail address from your Android phone in the form above. I'll add you to the closed test and email you the Google Play install link — usually within a day.</span><span class="lang-node" data-key="a1_es">Introduce arriba la dirección de Gmail de tu móvil Android. Te añadiré a la prueba cerrada y te enviaré el enlace de instalación de Google Play — normalmente en un día.</span><span class="lang-node" data-key="a1_pl">Wpisz w formularzu powyżej adres Gmail z Twojego telefonu z Androidem. Dodam Cię do testu zamkniętego i wyślę link instalacyjny z Google Play — zwykle w ciągu doby.</span><span class="lang-node" data-key="a1_de">Gib oben die Gmail-Adresse deines Android-Handys ein. Ich füge dich zum geschlossenen Test hinzu und schicke dir den Google-Play-Installationslink — meist innerhalb eines Tages.</span></p>
+          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q1_en">How do I install it?</span><span class="lang-node" data-key="q1_es">¿Cómo la instalo?</span><span class="lang-node" data-key="q1_pl">Jak ją zainstalować?</span><span class="lang-node" data-key="q1_de">Wie installiere ich sie?</span></h4>
+          <p class="text-muted"><span class="lang-node lang-active" data-key="a1_en">Open the <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">Google Play listing</a> on your Android phone and tap Install — it's free, no account needed.</span><span class="lang-node" data-key="a1_es">Abre la <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">ficha de Google Play</a> en tu móvil Android y pulsa Instalar — es gratis y sin cuenta.</span><span class="lang-node" data-key="a1_pl">Otwórz <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">stronę Google Play</a> na telefonie z Androidem i dotknij Zainstaluj — za darmo, bez konta.</span><span class="lang-node" data-key="a1_de">Öffne die <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">Google-Play-Seite</a> auf deinem Android-Handy und tippe auf Installieren — kostenlos, ohne Konto.</span></p>
         </div>
         <div>
           <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q2_en">What data does it collect?</span><span class="lang-node" data-key="q2_es">¿Qué datos recopila?</span><span class="lang-node" data-key="q2_pl">Jakie dane zbiera?</span><span class="lang-node" data-key="q2_de">Welche Daten werden erfasst?</span></h4>
@@ -281,6 +274,30 @@
         </div>
       </div>
     </section>
+
+    <!-- 10. For businesses (SaaS) -->
+    <section class="bg-primary-soft border-t border-line">
+      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col md:flex-row md:items-center justify-between gap-stack-md">
+        <div class="max-w-2xl">
+          <p class="text-primary font-bold text-sm uppercase tracking-widest mb-stack-sm">
+            <span class="lang-node lang-active" data-key="biz_kicker_en">For tourism businesses</span><span class="lang-node" data-key="biz_kicker_es">Para negocios turísticos</span><span class="lang-node" data-key="biz_kicker_pl">Dla firm turystycznych</span><span class="lang-node" data-key="biz_kicker_de">Für Tourismusbetriebe</span>
+          </p>
+          <h3 class="text-2xl font-bold mb-2">
+            <span class="lang-node lang-active" data-key="biz_h_en">Add “chance of sun” to your website</span><span class="lang-node" data-key="biz_h_es">Añade la “probabilidad de sol” a tu web</span><span class="lang-node" data-key="biz_h_pl">Dodaj „szansę na słońce” na swojej stronie</span><span class="lang-node" data-key="biz_h_de">Zeig die „Sonnenchance“ auf deiner Website</span>
+          </h3>
+          <p class="text-muted">
+            <span class="lang-node lang-active" data-key="biz_body_en">Run a hotel, apartment rental or travel agency? Embed the Sunly sun-chance widget on your site — the same 10 years of AEMET data, on your own pages.</span>
+            <span class="lang-node" data-key="biz_body_es">¿Tienes un hotel, apartamentos o agencia de viajes? Integra el widget de probabilidad de sol de Sunly en tu web — los mismos 10 años de datos AEMET, en tus propias páginas.</span>
+            <span class="lang-node" data-key="biz_body_pl">Prowadzisz hotel, wynajem apartamentów lub biuro podróży? Osadź widżet szansy na słońce Sunly na swojej stronie — te same 10 lat danych AEMET, u Ciebie.</span>
+            <span class="lang-node" data-key="biz_body_de">Du betreibst ein Hotel, eine Ferienwohnung oder ein Reisebüro? Bette das Sunly-Sonnenchance-Widget auf deiner Website ein — dieselben 10 Jahre AEMET-Daten, auf deinen eigenen Seiten.</span>
+          </p>
+        </div>
+        <a href="mailto:info@sunly.live?subject=Sunly%20for%20business" class="self-start md:self-auto whitespace-nowrap bg-primary text-on-primary font-bold py-3 px-6 rounded-xl inline-flex items-center gap-2 hover:opacity-90 transition-opacity">
+          <span class="material-symbols-outlined text-[20px]" aria-hidden="true">mail</span>
+          <span class="lang-node lang-active text-sm" data-key="biz_cta_en">Get in touch</span><span class="lang-node text-sm" data-key="biz_cta_es">Contáctanos</span><span class="lang-node text-sm" data-key="biz_cta_pl">Napisz do nas</span><span class="lang-node text-sm" data-key="biz_cta_de">Kontakt aufnehmen</span>
+        </a>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->
@@ -289,8 +306,12 @@
       <div class="text-center md:text-left">
         <div class="flex items-center justify-center md:justify-start gap-2 font-extrabold text-xl text-primary mb-2">
           <svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">
-            <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/><circle cx="50" cy="40" r="24" fill="url(#sunlyLogoSun)"/>
-            <path clip-path="url(#sunlyLogoTile)" d="M0 84 C 18 82, 22 74, 30 74 C 38 74, 42 82, 50 82 C 58 82, 62 74, 70 74 C 78 74, 82 82, 100 84 L 100 100 L 0 100 Z" fill="#fff"/>
+            <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/>
+            <circle cx="50" cy="43" r="21" fill="url(#sunlyLogoSun)"/>
+            <ellipse cx="44" cy="37" rx="5" ry="3.5" fill="#FFF9C4" opacity="0.45" transform="rotate(-20 44 37)"/>
+            <path clip-path="url(#sunlyLogoTile)" d="M0 80 C 15 78, 20 72, 25 72 L 28 78 C 40 76, 45 70, 50 70 L 53 78 C 65 76, 70 70, 75 70 L 78 78 C 90 76, 95 72, 100 72 L 100 100 L 0 100 Z" fill="#fff" opacity="0.28"/>
+            <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82 L 100 100 L 0 100 Z" fill="#fff"/>
+            <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82" fill="none" stroke="#A8D8F0" stroke-width="1" opacity="0.6"/>
           </svg><span>Sunly</span>
         </div>
         <p class="text-sm text-muted">© 2026 Sunly · Android · Data: AEMET (aemet.es) · Not affiliated with AEMET</p>
@@ -311,24 +332,7 @@
   </div>
 
   <script>
-    var W3 = {
-      en: { namePh: "Your name (optional)", emailPh: "Google / Gmail address",
-            sending: "Sending…", ok: "Thanks! I'll add your email to the Google Play test and send the install link — usually within a day.",
-            err: "Something went wrong. Please email info@sunly.live instead." },
-      es: { namePh: "Tu nombre (opcional)", emailPh: "Dirección de Google / Gmail",
-            sending: "Enviando…", ok: "¡Gracias! Te añadiré a la prueba de Google Play y te enviaré el enlace — normalmente en un día.",
-            err: "Algo falló. Escríbeme a info@sunly.live." },
-      pl: { namePh: "Twoje imię (opcjonalnie)", emailPh: "Adres Google / Gmail",
-            sending: "Wysyłanie…", ok: "Dzięki! Dodam Cię do testu Google Play i wyślę link instalacyjny — zwykle w ciągu doby.",
-            err: "Coś poszło nie tak. Napisz na info@sunly.live." },
-      de: { namePh: "Dein Name (optional)", emailPh: "Google- / Gmail-Adresse",
-            sending: "Senden…", ok: "Danke! Ich füge deine E-Mail zum Google-Play-Test hinzu und schicke dir den Installationslink — meist innerhalb eines Tages.",
-            err: "Etwas ist schiefgelaufen. Bitte schreib stattdessen an info@sunly.live." }
-    };
-    var current = "EN";
-
     function setLang(L) {
-      current = L;
       var suffix = "_" + L.toLowerCase();
       document.querySelectorAll(".lang-node").forEach(function (n) {
         n.classList.toggle("lang-active", n.getAttribute("data-key").slice(-3) === suffix);
@@ -347,9 +351,6 @@
         img.onerror = function () { this.onerror = null; this.src = "screens/en/" + base + ".png"; };
         img.src = "screens/" + lc + "/" + base + ".png";
       });
-      var t = W3[L.toLowerCase()] || W3.en;
-      var ne = document.getElementById("f-name"); if (ne) ne.placeholder = t.namePh;
-      var ee = document.getElementById("f-email"); if (ee) ee.placeholder = t.emailPh;
       document.documentElement.lang = L.toLowerCase();
       try { localStorage.setItem("sunly_lang", L); } catch (e) {}
     }
@@ -357,21 +358,6 @@
     var saved; try { saved = localStorage.getItem("sunly_lang"); } catch (e) {}
     var nav = (navigator.language || "en").slice(0, 2).toUpperCase();
     setLang(saved || (["EN", "ES", "PL", "DE"].indexOf(nav) >= 0 ? nav : "EN"));
-
-    var form = document.getElementById("tester-form");
-    var result = document.getElementById("form-result");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var t = W3[current.toLowerCase()] || W3.en;
-      result.classList.remove("hidden"); result.textContent = t.sending;
-      fetch("https://api.web3forms.com/submit", { method: "POST", body: new FormData(form) })
-        .then(function (r) { return r.json(); })
-        .then(function (j) {
-          if (j.success) { form.style.display = "none"; result.classList.add("text-primary", "border-primary"); result.textContent = t.ok; }
-          else { result.textContent = t.err; }
-        })
-        .catch(function () { result.textContent = t.err; });
-    });
 
     // Lightbox — click a screenshot to view it full-screen
     (function () {
