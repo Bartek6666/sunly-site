@@ -1,387 +1,725 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="color-scheme" content="light">
-  <meta name="robots" content="index, follow">
-  <title>Sunly — sprawdź szansę na słońce zanim wybierzesz termin wakacji</title>
-  <meta name="description" content="Darmowa aplikacja Android. Szansa na słońce w danym miejscu i miesiącu na podstawie 10 lat danych AEMET — Kanary, Baleary i wybrzeże Hiszpanii.">
-  <meta property="og:title" content="Sunly — szansa na słońce na Twoje wakacje">
-  <meta property="og:description" content="Darmowa aplikacja Android: statystyczna szansa na słońce z 10 lat danych AEMET. Kanary, Baleary, wybrzeże Hiszpanii.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://app.sunly.live">
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
-  <script id="tailwind-config">
-    tailwind.config = {
-      theme: { extend: {
-        colors: {
-          "primary": "#0052D4", "on-primary": "#ffffff",
-          "primary-soft": "#E7EFFC",
-          "sun": "#FBBF24", "sun-strong": "#F59E0B",
-          "background": "#F4F8FE", "surface": "#ffffff",
-          "ink": "#0F2540", "muted": "#5B6B82",
-          "line": "#E2E9F3", "line-soft": "#EEF2F8",
-          "surface-soft": "#F5F8FD"
-        },
-        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-        spacing: {
-          "stack-sm": "8px", "stack-md": "16px", "stack-lg": "32px", "stack-xl": "64px",
-          "gutter": "24px", "margin-mobile": "20px", "margin-desktop": "64px", "container-max": "1200px"
-        },
-        fontFamily: { "headline": ["Manrope"], "body": ["Manrope"], "label": ["Manrope"] }
-      } }
-    }
-  </script>
-  <style>
-    html { overflow-x: hidden; }
-    body { font-family: Manrope, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(175deg, #E4EEFB, #CFDFF4 60%, #C6DAF2); background-attachment: fixed; min-height: 100vh; overflow-x: hidden; max-width: 100%; }
-    .glass-header { backdrop-filter: blur(20px); background-color: rgba(244, 248, 254, 0.85); }
-    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    .lang-node { display: none; }
-    .lang-node.lang-active { display: revert; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sunly — will it be sunny when you go?</title>
+<meta name="description" content="Sunly shows the share of days that were actually sunny for any destination and month, from 10 years of official AEMET records. Free on Android. No ads, no accounts, no tracking.">
+<link rel="icon" href="sunly-logo.svg">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+
+<!-- Cookieless analytics -->
+<script data-goatcounter="https://sunly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+<style>
+:root{
+  /* colour */
+  --blue-400:#3B7DE0; --blue-500:#0052D4; --blue-600:#0046C0; --blue-700:#003A9E;
+  --sun-400:#FBBF24; --sun-500:#F59E0B; --sun-glow:rgba(251,191,36,.35);
+  --ink-900:#0F2540;
+  --white:#FFFFFF;
+  --bg-page:#F4F8FE;
+  --surface-panel:#E7EFFC;
+  --text-heading:#0F2540; --text-body:#1B2E48; --text-muted:#5B6B82; --text-subtle:#8A99AD;
+  --border-hairline:#E2E9F3; --border-glass:rgba(255,255,255,.65);
+  --success-500:#0B7A5B; --success-bg:#DCF3EA;
+  --bg-sky:linear-gradient(175deg,#E4EEFB,#CFDFF4 60%,#C6DAF2);
+
+  /* spacing (4px base) */
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;--space-6:24px;
+  --space-7:32px;--space-8:40px;--space-9:48px;--space-10:64px;--space-11:80px;--space-12:112px;--space-13:160px;
+
+  /* radii */
+  --radius-xs:6px;--radius-sm:10px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;--radius-2xl:36px;
+
+  /* type */
+  --font-sans:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --fs-display-1:clamp(40px,7.5vw,64px);
+  --fs-h1:clamp(30px,4.6vw,40px);--fs-h2:clamp(26px,3.6vw,32px);--fs-h3:24px;--fs-h4:20px;
+  --fs-body-lg:18px;--fs-body:16px;--fs-body-sm:14px;--fs-caption:13px;--fs-eyebrow:11px;
+  --lh-display:1.03;
+  --tracking-display:-0.035em;--tracking-heading:-0.022em;--tracking-caps:0.09em;--tracking-tight:-0.01em;
+  --type-body:400 var(--fs-body)/1.6 var(--font-sans);
+  --type-body-strong:700 var(--fs-body)/1.5 var(--font-sans);
+  --type-caption:500 var(--fs-caption)/1.5 var(--font-sans);
+  --type-eyebrow:700 var(--fs-eyebrow)/1 var(--font-sans);
+  --type-h1:800 var(--fs-h1)/1.08 var(--font-sans);
+  --type-h2:800 var(--fs-h2)/1.12 var(--font-sans);
+  --type-h3:700 var(--fs-h3)/1.2 var(--font-sans);
+  --type-h4:700 var(--fs-h4)/1.25 var(--font-sans);
+
+  /* layout */
+  --container-max:1160px;--container-narrow:720px;--gutter-lg:40px;
+
+  /* effects */
+  --blur-glass-strong:28px;
+  --shadow-sm:0 2px 10px rgba(15,37,64,.06);
+  --shadow-lg:0 24px 60px -20px rgba(15,37,64,.20),0 8px 20px -8px rgba(15,37,64,.12);
+  --shadow-xl:0 44px 90px -24px rgba(15,37,64,.42),0 12px 28px -10px rgba(15,37,64,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font:var(--type-body);color:var(--text-body);background:var(--white);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+h1,h2,h3,h4{color:var(--text-heading)}
+a{color:var(--blue-500);text-decoration:none}
+a:hover{text-decoration:underline}
+img{max-width:100%;display:block}
+:focus-visible{outline:2px solid var(--blue-500);outline-offset:2px;border-radius:4px}
+section{scroll-margin-top:80px}
+
+/* icons */
+.icon{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;line-height:1;display:inline-flex;white-space:nowrap;direction:ltr;-webkit-font-smoothing:antialiased;font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 24;user-select:none}
+.icon.fill{font-variation-settings:'FILL' 1,'wght' 400,'GRAD' 0,'opsz' 24}
+
+/* layout helpers */
+.wrap{max-width:var(--container-max);margin:0 auto;padding:0 var(--gutter-lg)}
+.wrap-narrow{max-width:var(--container-narrow);margin:0 auto;padding:0 var(--gutter-lg)}
+.sec{padding:var(--space-12) 0}
+.sec-white{background:var(--white)}
+.sec-page{background:var(--bg-page)}
+.sec-sky{background:var(--bg-sky)}
+.col{display:flex;flex-direction:column}
+.eyebrow{font:var(--type-eyebrow);letter-spacing:var(--tracking-caps);text-transform:uppercase;color:var(--text-subtle)}
+.lead{font:var(--type-body);font-size:var(--fs-body-lg);color:var(--text-muted)}
+.muted{color:var(--text-muted)}.subtle{color:var(--text-subtle)}
+.caption{font:var(--type-caption);color:var(--text-muted)}
+
+/* card */
+.card{background:var(--white);border:1px solid var(--border-hairline);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+.card.glass{background:rgba(255,255,255,.72);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);border-color:var(--border-glass)}
+.p5{padding:var(--space-5)}.p6{padding:var(--space-6)}
+
+/* badge */
+.badge{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 12px;font:700 var(--fs-caption)/1 var(--font-sans);white-space:nowrap}
+.badge .icon{font-size:15px}
+.badge.brand{background:var(--surface-panel);color:var(--blue-600)}
+.badge.brand.up{text-transform:uppercase;letter-spacing:.08em;font-size:var(--fs-eyebrow)}
+.badge.success{background:var(--success-bg);color:var(--success-500)}
+
+/* button */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:999px;border:1px solid transparent;font:700 var(--fs-body-sm)/1 var(--font-sans);cursor:pointer;text-decoration:none;transition:transform .16s ease,box-shadow .16s ease,background .16s ease;padding:0 20px;height:44px}
+.btn:hover{text-decoration:none;transform:translateY(-2px)}
+.btn .icon{font-size:20px}
+.btn.sun{background:var(--sun-400);color:var(--ink-900);box-shadow:0 8px 20px -8px var(--sun-glow)}
+.btn.sun:hover{background:var(--sun-500)}
+.btn.secondary{background:var(--blue-500);color:#fff}
+.btn.secondary:hover{background:var(--blue-600)}
+.btn.ghost{background:transparent;color:var(--blue-600)}
+.btn.ghost:hover{background:var(--surface-panel)}
+.btn.sm{height:36px;padding:0 14px;font-size:var(--fs-caption)}
+.btn.lg{height:54px;padding:0 26px;font-size:var(--fs-body)}
+
+/* header */
+.site-header{position:sticky;top:0;z-index:30;background:rgba(255,255,255,.72);backdrop-filter:blur(var(--blur-glass-strong)) saturate(150%);-webkit-backdrop-filter:blur(var(--blur-glass-strong)) saturate(150%);border-bottom:1px solid var(--border-glass)}
+.site-header .wrap{display:flex;align-items:center;gap:var(--space-7);padding-top:14px;padding-bottom:14px}
+.site-header nav{display:flex;gap:var(--space-6);flex:1}
+.site-header nav a{font:var(--type-body-strong);font-size:var(--fs-body-sm);color:var(--text-muted);letter-spacing:var(--tracking-tight)}
+.site-header nav a:hover{color:var(--blue-600);text-decoration:none}
+.brand-logo{height:30px}
+.header-actions{display:flex;align-items:center;gap:var(--space-4)}
+
+/* language switcher */
+.lang{position:relative}
+.lang-btn{display:inline-flex;align-items:center;gap:5px;height:36px;padding:0 10px;border-radius:999px;border:1px solid var(--border-hairline);background:#fff;color:var(--text-muted);font:700 var(--fs-caption)/1 var(--font-sans);cursor:pointer}
+.lang-btn .icon{font-size:18px}
+.lang-menu{position:absolute;right:0;top:44px;background:#fff;border:1px solid var(--border-hairline);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);padding:6px;display:none;min-width:150px;z-index:40}
+.lang-menu.open{display:block}
+.lang-menu button{display:flex;width:100%;align-items:center;gap:8px;background:none;border:none;padding:8px 10px;border-radius:8px;font:600 var(--fs-body-sm)/1 var(--font-sans);color:var(--text-body);cursor:pointer;text-align:left}
+.lang-menu button:hover{background:var(--surface-panel)}
+.lang-menu button[aria-current="true"]{color:var(--blue-600);font-weight:700}
+
+/* hero */
+.hero{background:var(--bg-sky);padding-bottom:var(--space-11);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.05fr .95fr;gap:var(--space-10);align-items:center;padding-top:var(--space-11)}
+.hero h1{font:800 var(--fs-display-1)/var(--lh-display) var(--font-sans);letter-spacing:var(--tracking-display)}
+.hero-lead{max-width:46ch}
+.hero-actions{display:flex;gap:var(--space-3);align-items:center;padding-top:var(--space-2);flex-wrap:wrap}
+.hero-actions .ios{font:var(--type-body-strong);color:var(--text-muted)}
+.hero-chips{display:flex;gap:var(--space-5);flex-wrap:wrap;padding-top:var(--space-2)}
+.hero-chips span{display:inline-flex;align-items:center;gap:7px;font:var(--type-caption);color:var(--text-muted)}
+.hero-chips .icon{font-size:18px;color:var(--blue-400)}
+.hero-phones{position:relative;height:600px}
+.phone{border-radius:34px;padding:7px;background:var(--ink-900);box-shadow:var(--shadow-xl);aspect-ratio:600/1310}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;border-radius:28px}
+.phone-back{position:absolute;left:216px;bottom:0;transform:rotate(5deg);z-index:1;box-shadow:var(--shadow-lg);height:470px}
+.phone-front{position:absolute;left:0;top:0;transform:rotate(-6deg);z-index:2;height:540px}
+
+/* how it works */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-6)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.step-icon{width:48px;height:48px;border-radius:var(--radius-md);background:var(--surface-panel);display:flex;align-items:center;justify-content:center}
+.step-icon .icon{font-size:26px;color:var(--blue-500)}
+.card h3{font:var(--type-h4)}
+
+/* split sections */
+.split{display:grid;gap:var(--space-10);align-items:center}
+.split.measures{grid-template-columns:.9fr 1.1fr}
+.split.data{grid-template-columns:1fr 1fr}
+.sec-head{display:flex;flex-direction:column;gap:var(--space-4);max-width:var(--container-narrow)}
+.sec-head h2{font:var(--type-h2);letter-spacing:var(--tracking-heading)}
+/* Destinations: force single line on desktop, wrap normally on small screens */
+@media(min-width:1040px){
+  #destinations .sec-head{max-width:none}
+  #destinations .sec-head h2{white-space:nowrap}
+  #destinations .sec-head .lead{white-space:nowrap;max-width:none!important}
+}
+
+/* measure tiles */
+.measure{display:flex;flex-direction:column;gap:8px}
+.measure .icon{font-size:24px}
+.measure .icon.sun{color:var(--sun-500)}
+.measure .icon.blue{color:var(--blue-500)}
+.measure .t{font:var(--type-body-strong)}
+.measure .b{font:var(--type-caption);color:var(--text-muted)}
+.measure-phones{display:flex;justify-content:center;gap:var(--space-4);align-items:flex-end}
+.measure-phones .phone{position:static}
+.mp-wind{height:470px;margin-bottom:36px}
+.mp-rain{height:540px}
+
+/* destinations */
+.region{display:flex;flex-direction:column;gap:var(--space-4)}
+.region-name{font:var(--type-h4);color:var(--text-heading)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--space-4)}
+.place-tile{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:var(--space-5) var(--space-4);background:var(--white);border:1px solid var(--border-hairline);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+.place-tile .pt-icon{width:52px;height:52px;border-radius:999px;background:var(--surface-panel);display:flex;align-items:center;justify-content:center}
+.place-tile .pt-icon .icon{font-size:26px;color:var(--blue-500)}
+.place-tile .pt-name{font:var(--type-body-strong)}
+.place-tile .pt-meta{font:var(--type-caption);color:var(--text-muted)}
+
+/* data facts */
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4)}
+.fact{padding:var(--space-6)}
+.fact .n{font:800 var(--fs-h1)/1 var(--font-sans);letter-spacing:var(--tracking-display);color:var(--blue-600);font-variant-numeric:tabular-nums}
+.fact.small .n{font-size:var(--fs-h3)}
+.fact .l{font:var(--type-caption);color:var(--text-muted);margin-top:6px}
+.data-actions{display:flex;gap:var(--space-3);flex-wrap:wrap}
+
+/* privacy */
+.privacy .wrap-narrow{display:flex;flex-direction:column;gap:var(--space-7);align-items:center;text-align:center}
+.privacy h2{font:var(--type-h2);letter-spacing:var(--tracking-heading)}
+.privacy .grid-3{width:100%;text-align:left}
+.privacy .card .icon{font-size:24px;color:var(--blue-500)}
+.privacy .card .t{font:var(--type-body-strong)}
+.privacy .card .b{font:var(--type-caption);color:var(--text-muted)}
+
+/* download CTA */
+.cta-band{border-radius:var(--radius-2xl);background:var(--bg-sky);border:1px solid var(--border-glass);box-shadow:var(--shadow-lg);padding:var(--space-10) var(--space-9);display:grid;grid-template-columns:1fr auto;gap:var(--space-8);align-items:center}
+.cta-band h2{font:var(--type-h1);letter-spacing:var(--tracking-heading);max-width:24ch}
+.cta-band .lead{max-width:40ch}
+.cta-actions{display:flex;gap:var(--space-4);align-items:center;padding-top:var(--space-2);flex-wrap:wrap}
+.cta-logo{height:168px}
+
+/* business band */
+.biz .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:var(--space-8);align-items:center}
+.biz h3{font:var(--type-h3);letter-spacing:var(--tracking-heading)}
+.biz-visual{display:flex;justify-content:flex-end}
+.biz-chip{background:#fff;border:1px solid var(--border-hairline);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:var(--space-6);display:flex;flex-direction:column;gap:10px;min-width:220px}
+.biz-chip .ring{width:96px;height:96px;border-radius:999px;display:flex;align-items:center;justify-content:center;font:800 26px/1 var(--font-sans);color:var(--ink-900);background:conic-gradient(var(--sun-400) 0 81%,var(--surface-panel) 81% 100%)}
+.biz-chip .ring span{width:74px;height:74px;border-radius:999px;background:#fff;display:flex;align-items:center;justify-content:center}
+
+/* footer */
+.site-footer{background:var(--ink-900);color:var(--text-body)}
+.site-footer.sunly-dark{--text-body:#C9D6E8;--text-muted:#9FB0C6;--text-subtle:#7E90A8;--border-hairline:rgba(255,255,255,.12)}
+.footer-top{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:var(--space-8);padding:var(--space-10) var(--gutter-lg) var(--space-8);max-width:var(--container-max);margin:0 auto}
+.footer-top p{font:var(--type-body);font-size:var(--fs-body-sm);color:var(--text-muted);max-width:32ch}
+.footer-top a{font:var(--type-body);font-size:var(--fs-body-sm);color:var(--text-muted)}
+.footer-top a:hover{color:#fff}
+.footer-col{display:flex;flex-direction:column;gap:var(--space-3)}
+.footer-logo{height:30px}
+.footer-bottom{border-top:1px solid var(--border-hairline)}
+.footer-bottom .row{max-width:var(--container-max);margin:0 auto;padding:var(--space-5) var(--gutter-lg);display:flex;justify-content:space-between;gap:var(--space-6);flex-wrap:wrap;font:var(--type-caption);color:var(--text-subtle)}
+.footer-bottom a{color:var(--text-muted)}
+.footer-disc{display:inline-flex;gap:6px;align-items:center}
+.footer-disc .icon{font-size:16px}
+
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(15,37,64,.82);display:none;align-items:center;justify-content:center;z-index:100;padding:24px}
+.lb.open{display:flex}
+.lb img{max-height:92vh;max-width:92vw;border-radius:24px;box-shadow:var(--shadow-xl)}
+.zoomable{cursor:zoom-in}
+
+/* responsive */
+@media(max-width:900px){
+  :root{--gutter-lg:20px;--space-12:72px}
+  .site-header nav{display:none}
+  .hero .wrap,.split.measures,.split.data,.cta-band,.biz .wrap{grid-template-columns:1fr}
+  .hero-phones{height:520px;margin-top:var(--space-6)}
+  .cta-band{text-align:center}
+  .cta-band .lead,.hero-lead{max-width:none}
+  .cta-actions,.hero-actions,.hero-chips{justify-content:center}
+  .cta-logo{display:none}
+  .grid-3{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .biz-visual{justify-content:center}
+}
+@media(max-width:520px){
+  .hero-phones{height:460px}
+  .phone-back{display:none}
+  .phone-front{position:static;transform:none;height:auto;width:78%;margin:0 auto}
+  .measure-phones .mp-wind{display:none}
+  .footer-top{grid-template-columns:1fr}
+  .grid-2{grid-template-columns:1fr}
+}
+</style>
 </head>
-<body class="text-ink">
+<body>
 
-  <!-- Global SVG defs — logo Sunly (spójne z projektem sunly-saas) -->
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-    <linearGradient id="sunlyLogoSun" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD700"/><stop offset="1" stop-color="#FF8C00"/></linearGradient>
-    <radialGradient id="sunlyLogoSky" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#0052D4"/><stop offset="1" stop-color="#003EA6"/></radialGradient>
-    <clipPath id="sunlyLogoTile"><rect width="100" height="100" rx="22"/></clipPath>
-  </defs></svg>
-
-  <!-- 1. Sticky Header -->
-  <header class="fixed top-0 w-full z-50 glass-header border-b border-line">
-    <nav class="flex justify-between items-center h-16 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-      <div class="flex items-center gap-2 font-extrabold text-xl text-primary">
-        <svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true">
-          <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/>
-          <circle cx="50" cy="43" r="21" fill="url(#sunlyLogoSun)"/>
-          <ellipse cx="44" cy="37" rx="5" ry="3.5" fill="#FFF9C4" opacity="0.45" transform="rotate(-20 44 37)"/>
-          <path clip-path="url(#sunlyLogoTile)" d="M0 80 C 15 78, 20 72, 25 72 L 28 78 C 40 76, 45 70, 50 70 L 53 78 C 65 76, 70 70, 75 70 L 78 78 C 90 76, 95 72, 100 72 L 100 100 L 0 100 Z" fill="#fff" opacity="0.28"/>
-          <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82 L 100 100 L 0 100 Z" fill="#fff"/>
-          <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82" fill="none" stroke="#A8D8F0" stroke-width="1" opacity="0.6"/>
-        </svg><span>Sunly</span>
-      </div>
-      <div class="flex items-center gap-3 sm:gap-stack-md">
-        <div class="flex gap-3 sm:gap-4 items-center">
-          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="EN" aria-pressed="true" onclick="setLang('EN')">EN</button>
-          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="ES" aria-pressed="false" onclick="setLang('ES')">ES</button>
-          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="PL" aria-pressed="false" onclick="setLang('PL')">PL</button>
-          <button class="lang-btn text-sm font-medium hover:text-primary transition-colors" data-lang="DE" aria-pressed="false" onclick="setLang('DE')">DE</button>
-        </div>
-        <span class="material-symbols-outlined text-primary hidden sm:inline" aria-hidden="true">language</span>
-      </div>
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap">
+    <a href="#top" aria-label="Sunly home"><img class="brand-logo" src="sunly-lockup.svg" alt="Sunly"></a>
+    <nav>
+      <a href="#destinations" data-i18n="nav_destinations">Destinations</a>
+      <a href="#measures" data-i18n="nav_measures">What it measures</a>
+      <a href="#data" data-i18n="nav_data">The data</a>
+      <a href="#privacy" data-i18n="nav_privacy">Privacy</a>
     </nav>
-  </header>
+    <div class="header-actions">
+      <div class="lang">
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false"><span class="icon">language</span><span id="langLabel">EN</span></button>
+        <div class="lang-menu" id="langMenu" role="menu">
+          <button data-lang="en" role="menuitem">English</button>
+          <button data-lang="es" role="menuitem">Español</button>
+          <button data-lang="pl" role="menuitem">Polski</button>
+          <button data-lang="de" role="menuitem">Deutsch</button>
+        </div>
+      </div>
+      <a class="btn sun sm" href="https://play.google.com/store/apps/details?id=com.canaryweather.app"><span class="icon">download</span><span data-i18n="btn_getapp">Get the app</span></a>
+    </div>
+  </div>
+</header>
 
-  <main class="pt-16">
-    <!-- 2. Hero -->
-    <section class="relative min-h-[340px] md:min-h-[520px] flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0 z-0" aria-hidden="true">
-        <svg class="w-full h-full" preserveAspectRatio="xMidYMid slice" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4EEFB"/><stop offset="1" stop-color="#CFDFF4"/></linearGradient>
-            <radialGradient id="glow"><stop offset="0%" stop-color="#FBBF24" stop-opacity="0.55"/><stop offset="100%" stop-color="#FBBF24" stop-opacity="0"/></radialGradient>
-            <radialGradient id="sunfill" cx="50%" cy="40%" r="60%"><stop offset="0" stop-color="#FDE68A"/><stop offset="0.6" stop-color="#FBBF24"/><stop offset="1" stop-color="#F59E0B"/></radialGradient>
-          </defs>
-          <rect width="1000" height="600" fill="url(#sky)"/>
-          <circle cx="500" cy="230" r="240" fill="url(#glow)"><animate attributeName="opacity" dur="4s" repeatCount="indefinite" values="0.5;0.75;0.5"/></circle>
-          <circle cx="500" cy="230" r="96" fill="url(#sunfill)"/>
-          <path d="M0 470 Q 250 430 500 470 T 1000 470 V600 H0 Z" fill="#BFD6F2" opacity="0.7"/>
-          <path d="M0 510 Q 250 475 500 510 T 1000 510 V600 H0 Z" fill="#A9C6ED"/>
-        </svg>
-      </div>
-      <div class="relative z-10 text-center px-margin-mobile">
-        <h1 class="text-3xl sm:text-5xl md:text-6xl font-extrabold text-ink mb-stack-md md:mb-stack-lg tracking-tight">
-          <span class="lang-node lang-active" data-key="hero_title_en">Know your chance of sunshine before you book</span>
-          <span class="lang-node" data-key="hero_title_es">Conoce tu probabilidad de sol antes de reservar</span>
-          <span class="lang-node" data-key="hero_title_pl">Poznaj swoją szansę na słońce, zanim zarezerwujesz</span>
-          <span class="lang-node" data-key="hero_title_de">Kenne deine Sonnenchance, bevor du buchst</span>
-        </h1>
-        <p class="text-xl md:text-2xl text-muted max-w-2xl mx-auto">
-          <span class="lang-node lang-active" data-key="hero_sub_en">Sunly shows the statistical chance of sun for your destination and month — from 10 years of official AEMET weather data.</span>
-          <span class="lang-node" data-key="hero_sub_es">Sunly muestra la probabilidad estadística de sol para tu destino y mes — con 10 años de datos oficiales de AEMET.</span>
-          <span class="lang-node" data-key="hero_sub_pl">Sunly pokazuje statystyczną szansę na słońce dla Twojego miejsca i miesiąca — na podstawie 10 lat oficjalnych danych AEMET.</span>
-          <span class="lang-node" data-key="hero_sub_de">Sunly zeigt die statistische Sonnenchance für dein Ziel und deinen Monat — aus 10 Jahren offizieller AEMET-Wetterdaten.</span>
-        </p>
-      </div>
-    </section>
+<span id="top"></span>
 
-    <!-- 3. Intro & Trust Chips -->
-    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg">
-      <div class="flex-1">
-        <p class="text-sun-strong font-bold text-sm uppercase tracking-widest mb-stack-sm">
-          <span class="lang-node lang-active" data-key="meta_line_en">Free Android app · 10 years of AEMET data · Canary Islands, Balearic Islands, Spanish coast</span>
-          <span class="lang-node" data-key="meta_line_es">App Android gratuita · 10 años de datos AEMET · Islas Canarias, Islas Baleares, costa española</span>
-          <span class="lang-node" data-key="meta_line_pl">Darmowa aplikacja Android · 10 lat danych AEMET · Wyspy Kanaryjskie, Baleary, wybrzeże Hiszpanii</span>
-          <span class="lang-node" data-key="meta_line_de">Kostenlose Android-App · 10 Jahre AEMET-Daten · Kanarische Inseln, Balearen, spanische Küste</span>
-        </p>
-        <h2 class="text-3xl md:text-4xl font-bold mb-stack-md">
-          <span class="lang-node lang-active" data-key="intro_heading_en">Not a forecast — statistical certainty</span>
-          <span class="lang-node" data-key="intro_heading_es">No es un pronóstico — certeza estadística</span>
-          <span class="lang-node" data-key="intro_heading_pl">To nie prognoza — to statystyczna pewność</span>
-          <span class="lang-node" data-key="intro_heading_de">Keine Vorhersage — statistische Gewissheit</span>
-        </h2>
-        <p class="text-muted text-lg max-w-2xl">
-          <span class="lang-node lang-active" data-key="intro_text_en">Weather apps forecast the weather for tomorrow, the day after, a few days ahead. Sunly answers a different question: in this place, in this month, how often has it actually been sunny over the last 10 years?</span>
-          <span class="lang-node" data-key="intro_text_es">Las apps del tiempo predicen el tiempo para mañana, pasado mañana, unos días próximos. Sunly responde a otra pregunta: en este lugar, en este mes, ¿con qué frecuencia ha hecho sol en los últimos 10 años?</span>
-          <span class="lang-node" data-key="intro_text_pl">Aplikacje pogodowe prognozują pogodę na jutro, pojutrze, kilka przyszłych dni. Sunly odpowiada na inne pytanie: w tym miejscu, w tym miesiącu, jak często realnie świeciło słońce przez ostatnie 10 lat?</span>
-          <span class="lang-node" data-key="intro_text_de">Wetter-Apps sagen das Wetter für morgen, übermorgen, ein paar kommende Tage voraus. Sunly beantwortet eine andere Frage: Wie oft war es an diesem Ort in diesem Monat in den letzten 10 Jahren wirklich sonnig?</span>
-        </p>
-        <div class="flex flex-wrap gap-4 mt-stack-lg">
-          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">block</span><span class="lang-node lang-active" data-key="chip_ads_en">No ads</span><span class="lang-node" data-key="chip_ads_es">Sin anuncios</span><span class="lang-node" data-key="chip_ads_pl">Bez reklam</span><span class="lang-node" data-key="chip_ads_de">Keine Werbung</span></span>
-          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">visibility_off</span><span class="lang-node lang-active" data-key="chip_track_en">No tracking</span><span class="lang-node" data-key="chip_track_es">Sin rastreo</span><span class="lang-node" data-key="chip_track_pl">Bez śledzenia</span><span class="lang-node" data-key="chip_track_de">Kein Tracking</span></span>
-          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">payments</span><span class="lang-node lang-active" data-key="chip_free_en">Free</span><span class="lang-node" data-key="chip_free_es">Gratis</span><span class="lang-node" data-key="chip_free_pl">Za darmo</span><span class="lang-node" data-key="chip_free_de">Kostenlos</span></span>
-          <span class="flex items-center gap-2 bg-surface px-4 py-2 rounded-full border border-line text-sm font-medium"><span class="material-symbols-outlined text-primary text-[20px]" aria-hidden="true">database</span><span class="lang-node lang-active" data-key="chip_data_en">10 years of AEMET data</span><span class="lang-node" data-key="chip_data_es">10 años de datos AEMET</span><span class="lang-node" data-key="chip_data_pl">10 lat danych AEMET</span><span class="lang-node" data-key="chip_data_de">10 Jahre AEMET-Daten</span></span>
-        </div>
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="col" style="gap:var(--space-5)">
+      <h1><span data-i18n="hero_title_a">Will it be sunny</span><br><span data-i18n="hero_title_b">where you're headed?</span></h1>
+      <p class="lead hero-lead" data-i18n="hero_sub">Search a place, pick a month, and Sunly shows the statistical chance of sun based on 10 years of official AEMET data.</p>
+      <div class="hero-actions">
+        <a class="btn sun lg" href="https://play.google.com/store/apps/details?id=com.canaryweather.app"><span class="icon">android</span><span data-i18n="hero_btn_play">Get it on Google Play</span></a>
+        <span class="ios" data-i18n="hero_ios">iOS coming soon</span>
       </div>
-    </section>
-
-    <!-- 4. Screenshot Gallery -->
-    <section class="bg-surface border-y border-line py-stack-md md:py-stack-xl">
-      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-        <h3 class="text-2xl font-bold mb-stack-lg">
-          <span class="lang-node lang-active" data-key="gallery_title_en">See the app in action</span>
-          <span class="lang-node" data-key="gallery_title_es">Mira la app en acción</span>
-          <span class="lang-node" data-key="gallery_title_pl">Zobacz aplikację w akcji</span>
-          <span class="lang-node" data-key="gallery_title_de">Die App in Aktion</span>
-        </h3>
-        <div id="gallery" class="flex overflow-x-auto gap-stack-md no-scrollbar snap-x snap-mandatory -mx-3 px-3 py-3">
-          <img data-img="01-search" alt="Search — pick your destination" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/01-search.png">
-          <img data-img="02-regions" alt="Canary Islands, Balearics and the Spanish coast" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/02-regions.png">
-          <img data-img="03-result" alt="Sun chance and live weather" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/03-result.png">
-          <img data-img="04-stats" alt="Monthly statistics from 10 years of data" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/04-stats.png">
-          <img data-img="05-wind" alt="Wind details" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/05-wind.png">
-          <img data-img="06-rain" alt="Rain details" loading="lazy" class="h-[500px] rounded-xl flex-none snap-center shadow-xl border border-line cursor-pointer transition duration-200 hover:scale-[1.02] hover:ring-2 hover:ring-primary" src="screens/en/06-rain.png">
-        </div>
-        <p class="text-[12px] text-muted mt-3">
-          <span class="lang-node lang-active" data-key="gallery_note_en">Tap a screenshot to enlarge.</span>
-          <span class="lang-node" data-key="gallery_note_es">Toca una captura para ampliarla.</span>
-          <span class="lang-node" data-key="gallery_note_pl">Dotknij zrzut, aby powiększyć.</span>
-          <span class="lang-node" data-key="gallery_note_de">Tippe auf einen Screenshot zum Vergrößern.</span>
-        </p>
-      </div>
-    </section>
-
-    <!-- 5 & 7. Primary Card (tester sign-up) + Features -->
-    <section class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop pt-stack-xl pb-stack-md md:py-stack-xl grid grid-cols-1 lg:grid-cols-12 gap-gutter">
-      <!-- Primary: download from Google Play -->
-      <div id="download-card" class="lg:col-span-8 bg-surface rounded-3xl p-6 md:p-8 border border-primary/30 shadow-sm flex flex-col justify-center">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
-          <h3 class="text-2xl font-bold text-primary">
-            <span class="lang-node lang-active" data-key="card_title_en">Get Sunly on Google Play</span>
-            <span class="lang-node" data-key="card_title_es">Consigue Sunly en Google Play</span>
-            <span class="lang-node" data-key="card_title_pl">Pobierz Sunly z Google Play</span>
-            <span class="lang-node" data-key="card_title_de">Hol dir Sunly bei Google Play</span>
-          </h3>
-          <div class="bg-sun text-ink px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
-            <span class="lang-node lang-active" data-key="badge_en">Free</span><span class="lang-node" data-key="badge_es">Gratis</span><span class="lang-node" data-key="badge_pl">Za darmo</span><span class="lang-node" data-key="badge_de">Kostenlos</span>
-          </div>
-        </div>
-        <p class="text-muted mb-6 max-w-lg text-sm leading-relaxed">
-          <span class="lang-node lang-active" data-key="card_body_en">Free, no ads, no account. Install Sunly from Google Play and check the chance of sun for any destination and month in seconds.</span>
-          <span class="lang-node" data-key="card_body_es">Gratis, sin anuncios y sin cuenta. Instala Sunly desde Google Play y consulta la probabilidad de sol para cualquier destino y mes en segundos.</span>
-          <span class="lang-node" data-key="card_body_pl">Za darmo, bez reklam i bez konta. Zainstaluj Sunly z Google Play i sprawdź szansę na słońce dla dowolnego miejsca i miesiąca w kilka sekund.</span>
-          <span class="lang-node" data-key="card_body_de">Kostenlos, ohne Werbung, ohne Konto. Installiere Sunly aus Google Play und prüfe die Sonnenchance für jedes Ziel und jeden Monat in Sekunden.</span>
-        </p>
-        <div class="flex flex-wrap gap-x-5 gap-y-2 mb-6">
-          <span class="flex items-center gap-2 text-sm font-bold text-primary">
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">autorenew</span>
-            <span class="lang-node lang-active" data-key="benefit_upd_en">Automatic updates</span><span class="lang-node" data-key="benefit_upd_es">Actualizaciones automáticas</span><span class="lang-node" data-key="benefit_upd_pl">Automatyczne aktualizacje</span><span class="lang-node" data-key="benefit_upd_de">Automatische Updates</span>
-          </span>
-          <span class="flex items-center gap-2 text-sm font-bold text-primary">
-            <span class="material-symbols-outlined text-[20px]" aria-hidden="true">gpp_good</span>
-            <span class="lang-node lang-active" data-key="benefit_warn_en">Safe &amp; official</span><span class="lang-node" data-key="benefit_warn_es">Segura y oficial</span><span class="lang-node" data-key="benefit_warn_pl">Bezpieczna i oficjalna</span><span class="lang-node" data-key="benefit_warn_de">Sicher &amp; offiziell</span>
-          </span>
-        </div>
-        <a href="https://play.google.com/store/apps/details?id=com.canaryweather.app" target="_blank" rel="noopener" class="self-start bg-primary text-on-primary font-bold py-3.5 px-7 rounded-xl inline-flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4 2.5v19l16-9.5z"/></svg>
-          <span class="lang-node lang-active text-sm" data-key="btn_en">Get it on Google Play</span><span class="lang-node text-sm" data-key="btn_es">Descargar en Google Play</span><span class="lang-node text-sm" data-key="btn_pl">Pobierz z Google Play</span><span class="lang-node text-sm" data-key="btn_de">Bei Google Play laden</span>
-        </a>
-        <p class="text-[12px] text-muted mt-4">
-          <span class="lang-node lang-active" data-key="note_en">iOS version coming soon. See the <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">privacy policy</a>.</span>
-          <span class="lang-node" data-key="note_es">Versión para iOS muy pronto. Consulta la <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">política de privacidad</a>.</span>
-          <span class="lang-node" data-key="note_pl">Wersja na iOS wkrótce. Zobacz <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">politykę prywatności</a>.</span>
-          <span class="lang-node" data-key="note_de">iOS-Version kommt bald. Siehe die <a class="underline" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Datenschutzerklärung</a>.</span>
-        </p>
-      </div>
-
-      <!-- Features -->
-      <div class="lg:col-span-4 bg-surface rounded-3xl p-8 border border-line shadow-sm">
-        <h4 class="text-sm font-bold uppercase tracking-widest text-primary mb-stack-md">
-          <span class="lang-node lang-active" data-key="feat_h_en">Key features</span><span class="lang-node" data-key="feat_h_es">Funciones clave</span><span class="lang-node" data-key="feat_h_pl">Kluczowe funkcje</span><span class="lang-node" data-key="feat_h_de">Wichtigste Funktionen</span>
-        </h4>
-        <ul class="space-y-6">
-          <li class="flex items-start gap-4">
-            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">wb_sunny</span>
-            <div>
-              <p class="font-bold"><span class="lang-node lang-active" data-key="f1t_en">Sun chance</span><span class="lang-node" data-key="f1t_es">Probabilidad de sol</span><span class="lang-node" data-key="f1t_pl">Szansa na słońce</span><span class="lang-node" data-key="f1t_de">Sonnenchance</span></p>
-              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f1d_en">The % of sunny days for your place and month, from 10 years of records.</span><span class="lang-node" data-key="f1d_es">El % de días soleados para tu lugar y mes, con 10 años de registros.</span><span class="lang-node" data-key="f1d_pl">Odsetek słonecznych dni dla Twojego miejsca i miesiąca, z 10 lat pomiarów.</span><span class="lang-node" data-key="f1d_de">Der %-Anteil sonniger Tage für Ort und Monat, aus 10 Jahren Aufzeichnungen.</span></p>
-            </div>
-          </li>
-          <li class="flex items-start gap-4">
-            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">bar_chart</span>
-            <div>
-              <p class="font-bold"><span class="lang-node lang-active" data-key="f2t_en">Monthly stats</span><span class="lang-node" data-key="f2t_es">Estadísticas mensuales</span><span class="lang-node" data-key="f2t_pl">Statystyki miesięczne</span><span class="lang-node" data-key="f2t_de">Monatsstatistiken</span></p>
-              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f2d_en">Average highs and lows, rainy days, and 10-year temperature charts.</span><span class="lang-node" data-key="f2d_es">Máximas y mínimas medias, días de lluvia y gráficos de temperatura de 10 años.</span><span class="lang-node" data-key="f2d_pl">Średnie maks. i min., dni deszczowe oraz wykresy temperatur z 10 lat.</span><span class="lang-node" data-key="f2d_de">Durchschnittliche Höchst- und Tiefstwerte, Regentage und 10-Jahres-Temperaturdiagramme.</span></p>
-            </div>
-          </li>
-          <li class="flex items-start gap-4">
-            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">bolt</span>
-            <div>
-              <p class="font-bold"><span class="lang-node lang-active" data-key="f3t_en">Live weather</span><span class="lang-node" data-key="f3t_es">Tiempo en directo</span><span class="lang-node" data-key="f3t_pl">Pogoda na żywo</span><span class="lang-node" data-key="f3t_de">Live-Wetter</span></p>
-              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f3d_en">Current conditions from the nearest station, plus Calima and high-wave alerts.</span><span class="lang-node" data-key="f3d_es">Condiciones actuales de la estación más cercana, con avisos de calima y olas altas.</span><span class="lang-node" data-key="f3d_pl">Aktualne warunki z najbliższej stacji, alerty Calima i wysokich fal.</span><span class="lang-node" data-key="f3d_de">Aktuelle Bedingungen der nächsten Station, plus Calima- und Hohe-Wellen-Warnungen.</span></p>
-            </div>
-          </li>
-          <li class="flex items-start gap-4">
-            <span class="material-symbols-outlined text-sun-strong" aria-hidden="true">location_on</span>
-            <div>
-              <p class="font-bold"><span class="lang-node lang-active" data-key="f4t_en">Wide coverage</span><span class="lang-node" data-key="f4t_es">Amplia cobertura</span><span class="lang-node" data-key="f4t_pl">Szeroki zasięg</span><span class="lang-node" data-key="f4t_de">Große Abdeckung</span></p>
-              <p class="text-sm text-muted"><span class="lang-node lang-active" data-key="f4d_en">Canary Islands, Balearic Islands, Spanish Mediterranean coast.</span><span class="lang-node" data-key="f4d_es">Islas Canarias, Islas Baleares, costa mediterránea española.</span><span class="lang-node" data-key="f4d_pl">Wyspy Kanaryjskie, Baleary, hiszpańskie wybrzeże Morza Śródziemnego.</span><span class="lang-node" data-key="f4d_de">Kanarische Inseln, Balearen, spanische Mittelmeerküste.</span></p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- 9. FAQ -->
-    <section class="max-w-3xl mx-auto px-margin-mobile pt-stack-md pb-stack-xl md:py-stack-xl">
-      <h2 class="text-3xl font-bold mb-stack-lg text-center">
-        <span class="lang-node lang-active" data-key="faq_h_en">Frequently asked questions</span><span class="lang-node" data-key="faq_h_es">Preguntas frecuentes</span><span class="lang-node" data-key="faq_h_pl">Najczęstsze pytania</span><span class="lang-node" data-key="faq_h_de">Häufig gestellte Fragen</span>
-      </h2>
-      <div class="text-left space-y-gutter">
-        <div>
-          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q1_en">How do I install it?</span><span class="lang-node" data-key="q1_es">¿Cómo la instalo?</span><span class="lang-node" data-key="q1_pl">Jak ją zainstalować?</span><span class="lang-node" data-key="q1_de">Wie installiere ich sie?</span></h4>
-          <p class="text-muted"><span class="lang-node lang-active" data-key="a1_en">Open the <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">Google Play listing</a> on your Android phone and tap Install — it's free, no account needed.</span><span class="lang-node" data-key="a1_es">Abre la <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">ficha de Google Play</a> en tu móvil Android y pulsa Instalar — es gratis y sin cuenta.</span><span class="lang-node" data-key="a1_pl">Otwórz <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">stronę Google Play</a> na telefonie z Androidem i dotknij Zainstaluj — za darmo, bez konta.</span><span class="lang-node" data-key="a1_de">Öffne die <a class="underline" href="https://play.google.com/store/apps/details?id=com.canaryweather.app">Google-Play-Seite</a> auf deinem Android-Handy und tippe auf Installieren — kostenlos, ohne Konto.</span></p>
-        </div>
-        <div>
-          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q2_en">What data does it collect?</span><span class="lang-node" data-key="q2_es">¿Qué datos recopila?</span><span class="lang-node" data-key="q2_pl">Jakie dane zbiera?</span><span class="lang-node" data-key="q2_de">Welche Daten werden erfasst?</span></h4>
-          <p class="text-muted"><span class="lang-node lang-active" data-key="a2_en">Nothing that identifies you. Your location is used only on request to find the nearest station. See the full privacy policy.</span><span class="lang-node" data-key="a2_es">Nada que te identifique. Tu ubicación se usa solo a petición para encontrar la estación más cercana. Consulta la política de privacidad.</span><span class="lang-node" data-key="a2_pl">Żadnych identyfikujących. Lokalizacja używana jest tylko na żądanie, by znaleźć najbliższą stację. Zobacz politykę prywatności.</span><span class="lang-node" data-key="a2_de">Nichts, was dich identifiziert. Dein Standort wird nur auf Anfrage verwendet, um die nächste Station zu finden. Siehe die Datenschutzerklärung.</span></p>
-        </div>
-        <div>
-          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q3_en">Is it really free?</span><span class="lang-node" data-key="q3_es">¿Es realmente gratis?</span><span class="lang-node" data-key="q3_pl">Czy naprawdę za darmo?</span><span class="lang-node" data-key="q3_de">Ist es wirklich kostenlos?</span></h4>
-          <p class="text-muted"><span class="lang-node lang-active" data-key="a3_en">Yes — free, no ads, no account needed.</span><span class="lang-node" data-key="a3_es">Sí — gratis, sin anuncios, sin cuenta.</span><span class="lang-node" data-key="a3_pl">Tak — za darmo, bez reklam, bez konta.</span><span class="lang-node" data-key="a3_de">Ja — kostenlos, keine Werbung, kein Konto.</span></p>
-        </div>
-        <div>
-          <h4 class="font-bold text-lg mb-2"><span class="lang-node lang-active" data-key="q4_en">Is it a weather forecast?</span><span class="lang-node" data-key="q4_es">¿Es un pronóstico del tiempo?</span><span class="lang-node" data-key="q4_pl">Czy to prognoza pogody?</span><span class="lang-node" data-key="q4_de">Ist das eine Wettervorhersage?</span></h4>
-          <p class="text-muted"><span class="lang-node lang-active" data-key="a4_en">No. Sunly shows historical statistics — how often it was sunny in the past — to help you plan. It also shows current live conditions, but it is not a forecast.</span><span class="lang-node" data-key="a4_es">No. Sunly muestra estadísticas históricas — con qué frecuencia hizo sol en el pasado — para ayudarte a planificar. También muestra condiciones actuales, pero no es un pronóstico.</span><span class="lang-node" data-key="a4_pl">Nie. Sunly pokazuje statystyki historyczne — jak często było słonecznie w przeszłości — by pomóc w planowaniu. Pokazuje też aktualne warunki na żywo, ale nie jest prognozą.</span><span class="lang-node" data-key="a4_de">Nein. Sunly zeigt historische Statistiken — wie oft es früher sonnig war — um dir bei der Planung zu helfen. Es zeigt auch aktuelle Live-Bedingungen, ist aber keine Vorhersage.</span></p>
-        </div>
-      </div>
-    </section>
-
-    <!-- 10. For businesses (SaaS) -->
-    <section class="bg-primary-soft border-t border-line">
-      <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-stack-lg flex flex-col md:flex-row md:items-center justify-between gap-stack-md">
-        <div class="max-w-2xl">
-          <p class="text-primary font-bold text-sm uppercase tracking-widest mb-stack-sm">
-            <span class="lang-node lang-active" data-key="biz_kicker_en">For tourism businesses</span><span class="lang-node" data-key="biz_kicker_es">Para negocios turísticos</span><span class="lang-node" data-key="biz_kicker_pl">Dla firm turystycznych</span><span class="lang-node" data-key="biz_kicker_de">Für Tourismusbetriebe</span>
-          </p>
-          <h3 class="text-2xl font-bold mb-2">
-            <span class="lang-node lang-active" data-key="biz_h_en">Add “chance of sun” to your website</span><span class="lang-node" data-key="biz_h_es">Añade la “probabilidad de sol” a tu web</span><span class="lang-node" data-key="biz_h_pl">Dodaj „szansę na słońce” na swojej stronie</span><span class="lang-node" data-key="biz_h_de">Zeig die „Sonnenchance“ auf deiner Website</span>
-          </h3>
-          <p class="text-muted">
-            <span class="lang-node lang-active" data-key="biz_body_en">Run a hotel, apartment rental or travel agency? Embed the Sunly sun-chance widget on your site — the same 10 years of AEMET data, on your own pages.</span>
-            <span class="lang-node" data-key="biz_body_es">¿Tienes un hotel, apartamentos o agencia de viajes? Integra el widget de probabilidad de sol de Sunly en tu web — los mismos 10 años de datos AEMET, en tus propias páginas.</span>
-            <span class="lang-node" data-key="biz_body_pl">Prowadzisz hotel, wynajem apartamentów lub biuro podróży? Osadź widżet szansy na słońce Sunly na swojej stronie — te same 10 lat danych AEMET, u Ciebie.</span>
-            <span class="lang-node" data-key="biz_body_de">Du betreibst ein Hotel, eine Ferienwohnung oder ein Reisebüro? Bette das Sunly-Sonnenchance-Widget auf deiner Website ein — dieselben 10 Jahre AEMET-Daten, auf deinen eigenen Seiten.</span>
-          </p>
-        </div>
-        <a href="mailto:info@sunly.live?subject=Sunly%20for%20business" class="self-start md:self-auto whitespace-nowrap bg-primary text-on-primary font-bold py-3 px-6 rounded-xl inline-flex items-center gap-2 hover:opacity-90 transition-opacity">
-          <span class="material-symbols-outlined text-[20px]" aria-hidden="true">mail</span>
-          <span class="lang-node lang-active text-sm" data-key="biz_cta_en">Get in touch</span><span class="lang-node text-sm" data-key="biz_cta_es">Contáctanos</span><span class="lang-node text-sm" data-key="biz_cta_pl">Napisz do nas</span><span class="lang-node text-sm" data-key="biz_cta_de">Kontakt aufnehmen</span>
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer class="bg-surface py-stack-xl border-t border-line">
-    <div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-stack-lg">
-      <div class="text-center md:text-left">
-        <div class="flex items-center justify-center md:justify-start gap-2 font-extrabold text-xl text-primary mb-2">
-          <svg width="26" height="26" viewBox="0 0 100 100" aria-hidden="true">
-            <rect width="100" height="100" rx="22" fill="url(#sunlyLogoSky)"/>
-            <circle cx="50" cy="43" r="21" fill="url(#sunlyLogoSun)"/>
-            <ellipse cx="44" cy="37" rx="5" ry="3.5" fill="#FFF9C4" opacity="0.45" transform="rotate(-20 44 37)"/>
-            <path clip-path="url(#sunlyLogoTile)" d="M0 80 C 15 78, 20 72, 25 72 L 28 78 C 40 76, 45 70, 50 70 L 53 78 C 65 76, 70 70, 75 70 L 78 78 C 90 76, 95 72, 100 72 L 100 100 L 0 100 Z" fill="#fff" opacity="0.28"/>
-            <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82 L 100 100 L 0 100 Z" fill="#fff"/>
-            <path clip-path="url(#sunlyLogoTile)" d="M0 90 C 15 88, 20 82, 25 82 L 28 88 C 40 86, 45 80, 50 80 L 53 88 C 65 86, 70 80, 75 80 L 78 88 C 90 86, 95 82, 100 82" fill="none" stroke="#A8D8F0" stroke-width="1" opacity="0.6"/>
-          </svg><span>Sunly</span>
-        </div>
-        <p class="text-sm text-muted">© 2026 Sunly · Android · Data: AEMET (aemet.es) · Not affiliated with AEMET</p>
-      </div>
-      <div class="flex gap-6 text-sm font-medium">
-        <a class="hover:text-primary transition-colors" href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6">Privacy</a>
-        <a class="hover:text-primary transition-colors" href="mailto:info@sunly.live">Contact</a>
+      <div class="hero-chips">
+        <span><span class="icon">euro_symbol</span><span data-i18n="chip_free">Free</span></span>
+        <span><span class="icon">ads_click</span><span data-i18n="chip_noads">No ads</span></span>
+        <span><span class="icon">person_off</span><span data-i18n="chip_noaccounts">No accounts</span></span>
+        <span><span class="icon">visibility_off</span><span data-i18n="chip_notracking">No tracking</span></span>
       </div>
     </div>
-  </footer>
-
-  <!-- Lightbox -->
-  <div id="lightbox" class="hidden fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Screenshot">
-    <button id="lightbox-close" aria-label="Close" class="absolute top-4 right-4 w-11 h-11 flex items-center justify-center rounded-full bg-surface text-ink hover:text-primary border border-line">
-      <span class="material-symbols-outlined" aria-hidden="true">close</span>
-    </button>
-    <img id="lightbox-img" src="" alt="" class="max-h-[90vh] max-w-[95vw] w-auto rounded-2xl shadow-2xl">
+    <div class="hero-phones">
+      <div class="phone phone-back"><img class="zoomable" src="screens/en/01-search.png" alt="Sunly search screen" loading="lazy"></div>
+      <div class="phone phone-front"><img class="zoomable" src="screens/en/03-result.png" alt="Sunly sun-chance result screen" loading="lazy"></div>
+    </div>
   </div>
+</section>
 
-  <script>
-    function setLang(L) {
-      var suffix = "_" + L.toLowerCase();
-      document.querySelectorAll(".lang-node").forEach(function (n) {
-        n.classList.toggle("lang-active", n.getAttribute("data-key").slice(-3) === suffix);
-      });
-      document.querySelectorAll(".lang-btn").forEach(function (b) {
-        var on = b.getAttribute("data-lang") === L;
-        b.setAttribute("aria-pressed", String(on));
-        b.classList.toggle("text-primary", on);
-        b.classList.toggle("font-bold", on);
-        b.classList.toggle("underline", on);
-        b.classList.toggle("underline-offset-4", on);
-      });
-      var lc = L.toLowerCase();
-      document.querySelectorAll("#gallery img[data-img]").forEach(function (img) {
-        var base = img.getAttribute("data-img");
-        img.onerror = function () { this.onerror = null; this.src = "screens/en/" + base + ".png"; };
-        img.src = "screens/" + lc + "/" + base + ".png";
-      });
-      document.documentElement.lang = L.toLowerCase();
-      try { localStorage.setItem("sunly_lang", L); } catch (e) {}
-    }
+<!-- ============ HOW IT WORKS ============ -->
+<section class="sec sec-white" id="how">
+  <div class="wrap col" style="gap:var(--space-8)">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="how_eyebrow">How it works</span>
+      <h2 style="font:var(--type-h2);letter-spacing:var(--tracking-heading)" data-i18n="how_heading">Three taps between you and a sunny week</h2>
+    </div>
+    <div class="grid-3">
+      <div class="card p6 col" style="gap:var(--space-4)">
+        <span class="step-icon"><span class="icon">search</span></span>
+        <div class="col" style="gap:6px">
+          <span class="caption"><span data-i18n="step">Step</span> 1</span>
+          <h3 data-i18n="how_s1_title">Search a place</h3>
+          <p class="measure b" data-i18n="how_s1_body">or your location</p>
+        </div>
+      </div>
+      <div class="card p6 col" style="gap:var(--space-4)">
+        <span class="step-icon"><span class="icon">calendar_month</span></span>
+        <div class="col" style="gap:6px">
+          <span class="caption"><span data-i18n="step">Step</span> 2</span>
+          <h3 data-i18n="how_s2_title">Pick a month</h3>
+          <p class="measure b" data-i18n="how_s2_body">10 years of data, not a forecast</p>
+        </div>
+      </div>
+      <div class="card p6 col" style="gap:var(--space-4)">
+        <span class="step-icon"><span class="icon">wb_sunny</span></span>
+        <div class="col" style="gap:6px">
+          <span class="caption"><span data-i18n="step">Step</span> 3</span>
+          <h3 data-i18n="how_s3_title">See the sun chance</h3>
+          <p class="measure b" data-i18n="how_s3_body">plus temperature, wind, rain</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    var saved; try { saved = localStorage.getItem("sunly_lang"); } catch (e) {}
-    var nav = (navigator.language || "en").slice(0, 2).toUpperCase();
-    setLang(saved || (["EN", "ES", "PL", "DE"].indexOf(nav) >= 0 ? nav : "EN"));
+<!-- ============ WHAT IT MEASURES ============ -->
+<section class="sec sec-page" id="measures">
+  <div class="wrap split measures">
+    <div class="col" style="gap:var(--space-6)">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="meas_eyebrow">What it measures</span>
+        <h2 data-i18n="meas_heading">What can you check before booking your holiday?</h2>
+        <p class="lead" style="max-width:42ch" data-i18n="meas_intro">All data comes from the nearest AEMET station — its name is shown in the app.</p>
+      </div>
+      <div class="grid-2">
+        <div class="card p5 measure"><span class="icon fill sun">wb_sunny</span><span class="t" data-i18n="meas_sun_title">Sun chance</span><span class="b" data-i18n="meas_sun_body">How often the chosen month has sunny days.</span></div>
+        <div class="card p5 measure"><span class="icon fill blue">thermostat</span><span class="t" data-i18n="meas_temp_title">Temperature</span><span class="b" data-i18n="meas_temp_body">Average high and average low for the month.</span></div>
+        <div class="card p5 measure"><span class="icon fill blue">air</span><span class="t" data-i18n="meas_wind_title">Wind</span><span class="b" data-i18n="meas_wind_body">Average speed, Beaufort scale and trade-wind stability.</span></div>
+        <div class="card p5 measure"><span class="icon fill blue">rainy</span><span class="t" data-i18n="meas_rain_title">Rain</span><span class="b" data-i18n="meas_rain_body">Average precipitation and how many days it rained.</span></div>
+        <div class="card p5 measure"><span class="icon fill sun">grain</span><span class="t" data-i18n="meas_calima_title">Calima</span><span class="b" data-i18n="meas_calima_body">Saharan dust recorded at weather stations.</span></div>
+      </div>
+    </div>
+    <div class="measure-phones">
+      <div class="phone mp-wind"><img class="zoomable" src="screens/en/05-wind.png" alt="Sunly wind details screen" loading="lazy"></div>
+      <div class="phone mp-rain"><img class="zoomable" src="screens/en/06-rain.png" alt="Sunly rain details screen" loading="lazy"></div>
+    </div>
+  </div>
+</section>
 
-    // Lightbox — click a screenshot to view it full-screen
-    (function () {
-      var lb = document.getElementById("lightbox");
-      var lbImg = document.getElementById("lightbox-img");
-      function openLb(src, alt) {
-        lbImg.src = src; lbImg.alt = alt || "";
-        lb.classList.remove("hidden"); lb.classList.add("flex");
-        document.body.style.overflow = "hidden";
-      }
-      function closeLb() {
-        lb.classList.add("hidden"); lb.classList.remove("flex");
-        document.body.style.overflow = ""; lbImg.src = "";
-      }
-      document.querySelectorAll("#gallery img").forEach(function (img) {
-        img.addEventListener("click", function () { openLb(img.src, img.alt); });
-      });
-      document.getElementById("lightbox-close").addEventListener("click", closeLb);
-      lb.addEventListener("click", function (e) { if (e.target === lb) closeLb(); });
-      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLb(); });
-    })();
-  </script>
+<!-- ============ DESTINATIONS ============ -->
+<section class="sec sec-white" id="destinations">
+  <div class="wrap col" style="gap:var(--space-8)">
+    <div class="sec-head">
+      <span class="eyebrow" data-i18n="dest_eyebrow">Where Sunly works</span>
+      <h2 style="font:var(--type-h2);letter-spacing:var(--tracking-heading)" data-i18n="dest_heading">The Canaries, the Balearics and the south-east coast</h2>
+      <p class="lead" style="max-width:52ch" data-i18n="dest_intro">247 searchable places across the Canaries, the Balearics and the Spanish south-east coast.</p>
+    </div>
 
-  <!-- Analytics: GoatCounter — cookieless -->
-  <script data-goatcounter="https://sunly.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <div class="region">
+      <span class="region-name" data-i18n="group_canary">Canary Islands</span>
+      <div class="tiles">
+        <div class="place-tile"><span class="pt-icon"><span class="icon">volcano</span></span><span class="pt-name">Tenerife</span><span class="pt-meta" data-places="61"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">beach_access</span></span><span class="pt-name">Gran Canaria</span><span class="pt-meta" data-places="41"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">surfing</span></span><span class="pt-name">Fuerteventura</span><span class="pt-meta" data-places="27"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">park</span></span><span class="pt-name">La Palma</span><span class="pt-meta" data-places="22"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">landscape</span></span><span class="pt-name">Lanzarote</span><span class="pt-meta" data-places="18"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">forest</span></span><span class="pt-name">La Gomera</span><span class="pt-meta" data-places="11"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">terrain</span></span><span class="pt-name">El Hierro</span><span class="pt-meta" data-places="10"></span></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <span class="region-name" data-i18n="group_balearic">Balearic Islands</span>
+      <div class="tiles">
+        <div class="place-tile"><span class="pt-icon"><span class="icon">park</span></span><span class="pt-name">Mallorca</span><span class="pt-meta" data-places="7"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">sailing</span></span><span class="pt-name">Menorca</span><span class="pt-meta" data-places="7"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">beach_access</span></span><span class="pt-name">Ibiza</span><span class="pt-meta" data-places="7"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">waves</span></span><span class="pt-name">Formentera</span><span class="pt-meta" data-places="6"></span></div>
+      </div>
+    </div>
+
+    <div class="region">
+      <span class="region-name" data-i18n="group_coast">Spanish south-east coast</span>
+      <div class="tiles">
+        <div class="place-tile"><span class="pt-icon"><span class="icon">beach_access</span></span><span class="pt-name">Costa del Sol</span><span class="pt-meta" data-places="6"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">beach_access</span></span><span class="pt-name">Costa de Almería</span><span class="pt-meta" data-places="6"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">waves</span></span><span class="pt-name">Costa Cálida</span><span class="pt-meta" data-places="6"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">beach_access</span></span><span class="pt-name">Costa Blanca</span><span class="pt-meta" data-places="6"></span></div>
+        <div class="place-tile"><span class="pt-icon"><span class="icon">waves</span></span><span class="pt-name">Costa de Valencia</span><span class="pt-meta" data-places="6"></span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ THE DATA ============ -->
+<section class="sec sec-sky" id="data">
+  <div class="wrap split data">
+    <div class="col" style="gap:var(--space-5)">
+      <div class="sec-head">
+        <span class="eyebrow" data-i18n="data_eyebrow">The data</span>
+        <h2 data-i18n="data_heading">Official records. All backed by detailed measurements.</h2>
+        <p class="lead" style="max-width:48ch" data-i18n="data_body">Every number in Sunly comes from AEMET, Spain's national meteorological agency. We count sunny days, rainy days and windy days.</p>
+      </div>
+      <div class="data-actions">
+        <a class="btn secondary" href="https://www.aemet.es/en/datos_abiertos/AEMET_OpenData" target="_blank" rel="noopener"><span data-i18n="data_btn_method">How we calculate the data</span><span class="icon">arrow_forward</span></a>
+        <a class="btn ghost" href="#destinations"><span data-i18n="data_link_stations">Station list</span></a>
+      </div>
+    </div>
+    <div class="facts">
+      <div class="card glass fact"><div class="n">27</div><div class="l" data-i18n="data_stat_stations">AEMET stations</div></div>
+      <div class="card glass fact"><div class="n">10</div><div class="l" data-i18n="data_stat_years">years of records</div></div>
+      <div class="card glass fact small"><div class="n">2016–2025</div><div class="l" data-i18n="data_stat_window">record window</div></div>
+      <div class="card glass fact"><div class="n">0</div><div class="l" data-i18n="data_stat_trackers">trackers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PRIVACY ============ -->
+<section class="sec sec-white privacy" id="privacy">
+  <div class="wrap-narrow">
+    <h2 data-i18n="priv_heading">We don't want your data. We only provide the weather's.</h2>
+    <div class="grid-3">
+      <div class="card p5 col" style="gap:10px"><span class="icon">visibility_off</span><span class="t" data-i18n="priv_track_title">No tracking</span><span class="b" data-i18n="priv_track_body">No analytics SDKs, no ad IDs, no fingerprinting.</span></div>
+      <div class="card p5 col" style="gap:10px"><span class="icon">person_off</span><span class="t" data-i18n="priv_acc_title">No sign-up</span><span class="b" data-i18n="priv_acc_body">Nothing to sign up for. Nothing to delete.</span></div>
+      <div class="card p5 col" style="gap:10px"><span class="icon">ads_click</span><span class="t" data-i18n="priv_ads_title">No ads</span><span class="b" data-i18n="priv_ads_body">Free — use it as much as you want, and you never pay.</span></div>
+    </div>
+    <a href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6" target="_blank" rel="noopener" style="font:var(--type-body-strong)" data-i18n="priv_link">Read the privacy policy</a>
+  </div>
+</section>
+
+<!-- ============ DOWNLOAD CTA ============ -->
+<section class="sec sec-page">
+  <div class="wrap">
+    <div class="cta-band">
+      <div class="col" style="gap:var(--space-4)">
+        <h2 data-i18n="cta_heading">Plan your next trip somewhere the sun always shines.</h2>
+        <p class="lead" data-i18n="cta_body">Free on Android. No ads, no accounts, no tracking.</p>
+        <div class="cta-actions">
+          <a class="btn sun lg" href="https://play.google.com/store/apps/details?id=com.canaryweather.app"><span class="icon">android</span><span data-i18n="hero_btn_play">Get it on Google Play</span></a>
+          <span class="ios" data-i18n="hero_ios">iOS coming soon</span>
+          <a href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6" target="_blank" rel="noopener" style="font:var(--type-body-strong)" data-i18n="cta_link_privacy">Privacy policy</a>
+        </div>
+        <span class="caption" data-i18n="cta_footnote">Data: AEMET, 2016–2025. Sunly is not affiliated with or endorsed by AEMET.</span>
+      </div>
+      <img class="cta-logo" src="sunly-vertical.svg" alt="Sunly">
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR TOURISM BUSINESSES (SaaS) ============ -->
+<section class="sec sec-white biz" id="business">
+  <div class="wrap">
+    <div class="col" style="gap:var(--space-4)">
+      <span class="eyebrow" data-i18n="biz_eyebrow">For tourism businesses</span>
+      <h3 data-i18n="biz_heading">Add “chance of sun” to your website</h3>
+      <p class="lead" style="max-width:48ch" data-i18n="biz_body">Run a hotel, apartments or a travel agency? Embed the Sunly sun-chance widget on your site — the same 10 years of AEMET data.</p>
+      <div style="padding-top:var(--space-2)">
+        <a class="btn secondary" href="mailto:info@sunly.live?subject=Sunly for business"><span class="icon">mail</span><span data-i18n="biz_cta">Get in touch</span></a>
+      </div>
+    </div>
+    <div class="biz-visual">
+      <div class="biz-chip">
+        <div class="ring"><span>81%</span></div>
+        <span class="pt-name">Lanzarote · <span data-i18n="biz_month">March</span></span>
+        <span class="caption" data-i18n="biz_chip_note">chance of sun · your site</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer sunly-dark">
+  <div class="footer-top">
+    <div class="col" style="gap:var(--space-4)">
+      <img class="footer-logo" src="sunly-lockup-dark.svg" alt="Sunly">
+      <p data-i18n="foot_tagline">Ten years of official AEMET observations, turned into one honest number: your chance of sunshine.</p>
+      <span class="caption" data-i18n="foot_free">Free. No ads. No accounts.</span>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow">Sunly</span>
+      <a href="#destinations" data-i18n="nav_destinations">Destinations</a>
+      <a href="#measures" data-i18n="nav_measures">What it measures</a>
+      <a href="https://play.google.com/store/apps/details?id=com.canaryweather.app" data-i18n="foot_getapp">Get the app</a>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow" data-i18n="foot_col_data">Data</span>
+      <a href="https://www.aemet.es/en/datos_abiertos/AEMET_OpenData" target="_blank" rel="noopener" data-i18n="foot_aemet_sources">AEMET sources</a>
+      <a href="#destinations" data-i18n="foot_coverage">Coverage: 27 stations</a>
+    </div>
+    <div class="footer-col">
+      <span class="eyebrow" data-i18n="foot_col_legal">Legal</span>
+      <a href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6" target="_blank" rel="noopener" data-i18n="cta_link_privacy">Privacy policy</a>
+      <a href="mailto:info@sunly.live" data-i18n="foot_contact">Contact</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="row">
+      <span>© 2026 Sunly · app.sunly.live · <a href="https://fishy-chili-431.notion.site/Privacy-Policy-Sunly-33fcf25df26a80ecba78deb415a373b6" target="_blank" rel="noopener" data-i18n="cta_link_privacy">Privacy policy</a></span>
+      <span class="footer-disc"><span class="icon">public</span><span data-i18n="foot_bottom_disclaimer">Data: AEMET (2016–2025). Sunly is not affiliated with or endorsed by AEMET.</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lb" id="lightbox"><img id="lbImg" src="" alt=""></div>
+
+<script>
+/* ---------- translations (EN is inline default) ---------- */
+const I18N = {
+  es:{
+    nav_destinations:"Destinos",nav_measures:"Qué mide",nav_data:"Los datos",nav_privacy:"Privacidad",
+    btn_getapp:"Descargar la app",
+    hero_title_a:"¿Hará sol",hero_title_b:"adonde vayas?",
+    hero_sub:"Busca un lugar, elige un mes y Sunly te muestra la probabilidad estadística de sol basada en 10 años de datos oficiales de AEMET.",
+    hero_btn_play:"Disponible en Google Play",hero_ios:"iOS muy pronto",
+    chip_free:"Gratis",chip_noads:"Sin anuncios",chip_noaccounts:"Sin cuentas",chip_notracking:"Sin rastreo",
+    step:"Paso",
+    how_eyebrow:"Cómo funciona",how_heading:"Tres toques entre tú y una semana soleada",
+    how_s1_title:"Busca un lugar",how_s1_body:"o tu ubicación",
+    how_s2_title:"Elige un mes",how_s2_body:"10 años de datos, no un pronóstico",
+    how_s3_title:"Mira la probabilidad de sol",how_s3_body:"más temperatura, viento y lluvia",
+    meas_eyebrow:"Qué mide",meas_heading:"¿Qué puedes comprobar antes de reservar tus vacaciones?",
+    meas_intro:"Todos los datos provienen de la estación AEMET más cercana; su nombre se indica en la app.",
+    meas_sun_title:"Probabilidad de sol",meas_sun_body:"Con qué frecuencia hay días soleados en el mes elegido.",
+    meas_temp_title:"Temperatura",meas_temp_body:"Máxima y mínima promedio del mes.",
+    meas_wind_title:"Viento",meas_wind_body:"Velocidad media, escala Beaufort y estabilidad de los vientos alisios.",
+    meas_rain_title:"Lluvia",meas_rain_body:"Precipitación media y cuántos días llovió.",
+    meas_calima_title:"Calima",meas_calima_body:"Polvo sahariano registrado en las estaciones meteorológicas.",
+    dest_eyebrow:"Dónde funciona Sunly",dest_heading:"Las Canarias, las Baleares y la costa sureste",
+    dest_intro:"247 lugares que puedes buscar en las Canarias, las Baleares y la costa sureste de España.",
+    group_canary:"Islas Canarias",group_balearic:"Islas Baleares",group_coast:"Costa sureste de España",
+    data_eyebrow:"Los datos",data_heading:"Registros oficiales. Todo confirmado con mediciones detalladas.",
+    data_body:"Cada número de Sunly viene de AEMET, la agencia meteorológica nacional de España. Contamos los días soleados, los días de lluvia y de viento.",
+    data_btn_method:"Cómo calculamos los datos",data_link_stations:"Lista de estaciones",
+    data_stat_stations:"estaciones AEMET",data_stat_years:"años de registros",data_stat_window:"periodo de registro",data_stat_trackers:"rastreadores",
+    data_disclaimer:"Sunly no está afiliada a AEMET ni cuenta con su respaldo.",
+    priv_heading:"No queremos tus datos. Solo proporcionamos los del tiempo.",
+    priv_track_title:"Sin rastreo",priv_track_body:"Sin SDKs de analítica, sin IDs de anuncios, sin fingerprinting.",
+    priv_acc_title:"Sin registro",priv_acc_body:"Nada que registrar. Nada que borrar.",
+    priv_ads_title:"Sin anuncios",priv_ads_body:"Gratis — úsala cuanto quieras y nunca pagas.",
+    priv_link:"Leer la política de privacidad",
+    cta_heading:"Planea tu próximo viaje a lugares donde siempre brilla el sol.",cta_body:"Gratis en Android. Sin anuncios, sin cuentas, sin rastreo.",
+    cta_link_privacy:"Política de privacidad",cta_footnote:"Datos: AEMET, 2016–2025. Sunly no está afiliada a AEMET ni cuenta con su respaldo.",
+    biz_eyebrow:"Para negocios turísticos",biz_heading:"Añade la «probabilidad de sol» a tu web",
+    biz_body:"¿Tienes un hotel, apartamentos o una agencia de viajes? Integra el widget de probabilidad de sol de Sunly en tu web — los mismos 10 años de datos de AEMET.",
+    biz_cta:"Contactar",biz_month:"marzo",biz_chip_note:"probabilidad de sol · tu web",
+    foot_tagline:"Diez años de observaciones oficiales de AEMET, convertidos en un número honesto: tu probabilidad de sol.",
+    foot_free:"Gratis. Sin anuncios. Sin cuentas.",foot_col_data:"Datos",foot_col_legal:"Legal",
+    foot_getapp:"Descargar la app",foot_aemet_sources:"Fuentes de AEMET",foot_coverage:"Cobertura: 27 estaciones",foot_contact:"Contacto",
+    foot_bottom_disclaimer:"Datos: AEMET (2016–2025). Sunly no está afiliada a AEMET ni cuenta con su respaldo.",
+    places:"lugares"
+  },
+  pl:{
+    nav_destinations:"Miejsca",nav_measures:"Co mierzy",nav_data:"Dane",nav_privacy:"Prywatność",
+    btn_getapp:"Pobierz aplikację",
+    hero_title_a:"Czy będzie słonecznie,",hero_title_b:"tam gdzie pojedziesz?",
+    hero_sub:"Wyszukaj miejsce, wybierz miesiąc, a Sunly pokaże statystyczną szansę na słońce na podstawie 10 lat oficjalnych danych AEMET.",
+    hero_btn_play:"Pobierz z Google Play",hero_ios:"iOS wkrótce",
+    chip_free:"Za darmo",chip_noads:"Bez reklam",chip_noaccounts:"Bez kont",chip_notracking:"Bez śledzenia",
+    step:"Krok",
+    how_eyebrow:"Jak to działa",how_heading:"Trzy dotknięcia dzielą Cię od słonecznego tygodnia",
+    how_s1_title:"Wyszukaj miejsce",how_s1_body:"albo Twoja lokalizacja",
+    how_s2_title:"Wybierz miesiąc",how_s2_body:"10 lat danych, nie prognoza",
+    how_s3_title:"Zobacz szansę na słońce",how_s3_body:"plus temperatura, wiatr, deszcz",
+    meas_eyebrow:"Co mierzy",meas_heading:"Co możesz sprawdzić przed rezerwacją wakacji?",
+    meas_intro:"Wszystkie dane pochodzą z najbliższej stacji AEMET — jej nazwa jest podana w aplikacji.",
+    meas_sun_title:"Szansa na słońce",meas_sun_body:"Pokazuje jak często w wybranym miesiącu występują dni słoneczne.",
+    meas_temp_title:"Temperatura",meas_temp_body:"Średnia temperatura maksymalna i minimalna w miesiącu.",
+    meas_wind_title:"Wiatr",meas_wind_body:"Średnia prędkość, skala Beauforta i stabilność pasatów.",
+    meas_rain_title:"Deszcz",meas_rain_body:"Średnie opady i liczba dni z deszczem.",
+    meas_calima_title:"Calima",meas_calima_body:"Pył saharyjski zarejestrowany na stacjach meteo.",
+    dest_eyebrow:"Gdzie działa Sunly",dest_heading:"Kanary, Baleary i wybrzeże południowo-wschodnie",
+    dest_intro:"247 miejsc do wyszukania na Kanarach, Balearach i południowo-wschodnim wybrzeżu Hiszpanii.",
+    group_canary:"Wyspy Kanaryjskie",group_balearic:"Baleary",group_coast:"Południowo-wschodnie wybrzeże Hiszpanii",
+    data_eyebrow:"Dane",data_heading:"Oficjalne dane. Wszystko potwierdzone szczegółowymi pomiarami.",
+    data_body:"Każda liczba w Sunly pochodzi z AEMET, hiszpańskiej krajowej agencji meteorologicznej. Liczymy dni słoneczne, dni z deszczem i wiatrem.",
+    data_btn_method:"Poznaj metodę przeliczania danych",data_link_stations:"Lista stacji",
+    data_stat_stations:"stacji AEMET",data_stat_years:"lat danych",data_stat_window:"zakres danych",data_stat_trackers:"trackery",
+    data_disclaimer:"Sunly nie jest powiązana z AEMET ani przez nią wspierana.",
+    priv_heading:"Nie chcemy Twoich danych. Dostarczamy tylko dane o pogodzie.",
+    priv_track_title:"Bez śledzenia",priv_track_body:"Bez SDK analitycznych, bez identyfikatorów reklamowych, bez fingerprintingu.",
+    priv_acc_title:"Bez rejestracji",priv_acc_body:"Nie ma się do czego rejestrować. Nie ma czego usuwać.",
+    priv_ads_title:"Bez reklam",priv_ads_body:"Za darmo — używasz ile chcesz i za to nie płacisz.",
+    priv_link:"Przeczytaj politykę prywatności",
+    cta_heading:"Zaplanuj następną podróż do miejsc, w których zawsze świeci słońce.",cta_body:"Za darmo na Androida. Bez reklam, bez kont, bez śledzenia.",
+    cta_link_privacy:"Polityka prywatności",cta_footnote:"Dane: AEMET, 2016–2025. Sunly nie jest powiązana z AEMET ani przez nią wspierana.",
+    biz_eyebrow:"Dla firm turystycznych",biz_heading:"Dodaj „szansę na słońce” na swoją stronę www",
+    biz_body:"Prowadzisz hotel, apartamenty albo biuro podróży? Osadź widżet szansy na słońce Sunly na swojej stronie — te same 10 lat danych AEMET.",
+    biz_cta:"Napisz do nas",biz_month:"marzec",biz_chip_note:"szansa na słońce · Twoja strona",
+    foot_tagline:"Dziesięć lat oficjalnych obserwacji AEMET zamienionych w jedną uczciwą liczbę: Twoją szansę na słońce.",
+    foot_free:"Za darmo. Bez reklam. Bez kont.",foot_col_data:"Dane",foot_col_legal:"Prawne",
+    foot_getapp:"Pobierz aplikację",foot_aemet_sources:"Źródła AEMET",foot_coverage:"Zasięg: 27 stacji",foot_contact:"Kontakt",
+    foot_bottom_disclaimer:"Dane: AEMET (2016–2025). Sunly nie jest powiązana z AEMET ani przez nią wspierana.",
+    places:"__PL__"
+  },
+  de:{
+    nav_destinations:"Reiseziele",nav_measures:"Was es misst",nav_data:"Die Daten",nav_privacy:"Datenschutz",
+    btn_getapp:"App holen",
+    hero_title_a:"Wird es sonnig,",hero_title_b:"wohin du reist?",
+    hero_sub:"Suche einen Ort, wähle einen Monat, und Sunly zeigt dir die statistische Sonnenwahrscheinlichkeit auf Basis von 10 Jahren offiziellen AEMET-Daten.",
+    hero_btn_play:"Jetzt bei Google Play",hero_ios:"iOS bald verfügbar",
+    chip_free:"Kostenlos",chip_noads:"Keine Werbung",chip_noaccounts:"Keine Konten",chip_notracking:"Kein Tracking",
+    step:"Schritt",
+    how_eyebrow:"So funktioniert's",how_heading:"Drei Tipps zwischen dir und einer sonnigen Woche",
+    how_s1_title:"Ort suchen",how_s1_body:"oder dein Standort",
+    how_s2_title:"Monat wählen",how_s2_body:"10 Jahre Daten, keine Vorhersage",
+    how_s3_title:"Sonnenchance sehen",how_s3_body:"plus Temperatur, Wind, Regen",
+    meas_eyebrow:"Was es misst",meas_heading:"Was kannst du vor der Urlaubsbuchung prüfen?",
+    meas_intro:"Alle Daten stammen von der nächsten AEMET-Station – ihr Name wird in der App angezeigt.",
+    meas_sun_title:"Chance auf Sonne",meas_sun_body:"Wie oft es im gewählten Monat sonnige Tage gibt.",
+    meas_temp_title:"Temperatur",meas_temp_body:"Durchschnittliche Höchst- und Tiefstwerte des Monats.",
+    meas_wind_title:"Wind",meas_wind_body:"Durchschnittsgeschwindigkeit, Beaufort-Skala und Stabilität der Passatwinde.",
+    meas_rain_title:"Regen",meas_rain_body:"Durchschnittlicher Niederschlag und an wie vielen Tagen es regnete.",
+    meas_calima_title:"Calima",meas_calima_body:"An Wetterstationen erfasster Saharastaub.",
+    dest_eyebrow:"Wo Sunly funktioniert",dest_heading:"Die Kanaren, die Balearen und die Südostküste",
+    dest_intro:"247 durchsuchbare Orte auf den Kanaren, den Balearen und an der spanischen Südostküste.",
+    group_canary:"Kanarische Inseln",group_balearic:"Balearen",group_coast:"Spanische Südostküste",
+    data_eyebrow:"Die Daten",data_heading:"Offizielle Aufzeichnungen. Alles durch genaue Messungen belegt.",
+    data_body:"Jede Zahl in Sunly stammt von AEMET, Spaniens nationalem Wetterdienst. Wir zählen Sonnentage, Regentage und Windtage.",
+    data_btn_method:"Wie wir die Daten berechnen",data_link_stations:"Stationsliste",
+    data_stat_stations:"AEMET-Stationen",data_stat_years:"Jahre an Aufzeichnungen",data_stat_window:"Erfassungszeitraum",data_stat_trackers:"Tracker",
+    data_disclaimer:"Sunly ist nicht mit AEMET verbunden und wird nicht von AEMET unterstützt.",
+    priv_heading:"Wir wollen deine Daten nicht. Wir liefern nur Wetterdaten.",
+    priv_track_title:"Kein Tracking",priv_track_body:"Keine Analyse-SDKs, keine Werbe-IDs, kein Fingerprinting.",
+    priv_acc_title:"Keine Registrierung",priv_acc_body:"Nichts zum Anmelden. Nichts zum Löschen.",
+    priv_ads_title:"Keine Werbung",priv_ads_body:"Kostenlos — nutze sie so viel du willst, ohne zu zahlen.",
+    priv_link:"Datenschutzerklärung lesen",
+    cta_heading:"Plane deine nächste Reise dorthin, wo immer die Sonne scheint.",cta_body:"Kostenlos für Android. Keine Werbung, keine Konten, kein Tracking.",
+    cta_link_privacy:"Datenschutzerklärung",cta_footnote:"Daten: AEMET, 2016–2025. Sunly ist nicht mit AEMET verbunden und wird nicht von AEMET unterstützt.",
+    biz_eyebrow:"Für Tourismusbetriebe",biz_heading:"Bring die „Chance auf Sonne” auf deine Website",
+    biz_body:"Du betreibst ein Hotel, Apartments oder ein Reisebüro? Binde das Sunly-Sonnenchance-Widget auf deiner Website ein — dieselben 10 Jahre AEMET-Daten.",
+    biz_cta:"Kontakt aufnehmen",biz_month:"März",biz_chip_note:"Chance auf Sonne · deine Website",
+    foot_tagline:"Zehn Jahre offizieller AEMET-Beobachtungen, verwandelt in eine ehrliche Zahl: deine Chance auf Sonne.",
+    foot_free:"Kostenlos. Keine Werbung. Keine Konten.",foot_col_data:"Daten",foot_col_legal:"Rechtliches",
+    foot_getapp:"App holen",foot_aemet_sources:"AEMET-Quellen",foot_coverage:"Abdeckung: 27 Stationen",foot_contact:"Kontakt",
+    foot_bottom_disclaimer:"Daten: AEMET (2016–2025). Sunly ist nicht mit AEMET verbunden und wird nicht von AEMET unterstützt.",
+    places:"Orte"
+  }
+};
+const EN_PLACES="places";
+const LANG_LABEL={en:"EN",es:"ES",pl:"PL",de:"DE"};
+
+function plPlaces(n){const d=n%10,dd=n%100;return (d>=2&&d<=4&&!(dd>=12&&dd<=14))?"miejsca":"miejsc";}
+function placesWord(lang,n){
+  if(lang==="pl")return plPlaces(n);
+  if(lang==="es")return "lugares";
+  if(lang==="de")return "Orte";
+  return EN_PLACES;
+}
+/* Store English originals once, then always render from a table (robust when
+   switching back to EN). */
+(function(){
+  // capture English originals
+  const en={};
+  document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.getAttribute("data-i18n");if(en[k]==null)en[k]=el.textContent;});
+  I18N.en=en;
+  window.__setLang=function(lang){
+    const dict=I18N[lang]||I18N.en;
+    document.querySelectorAll("[data-i18n]").forEach(el=>{
+      const k=el.getAttribute("data-i18n");
+      if(dict[k]!=null)el.textContent=dict[k];
+    });
+    document.querySelectorAll(".pt-meta").forEach(el=>{
+      const n=parseInt(el.getAttribute("data-places"),10);
+      el.textContent=n+" "+placesWord(lang,n);
+    });
+    document.documentElement.lang=lang;
+    document.getElementById("langLabel").textContent=LANG_LABEL[lang];
+    document.querySelectorAll("#langMenu button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.lang===lang)));
+    try{localStorage.setItem("sunly_lang",lang);}catch(e){}
+  };
+  // initial language
+  let lang="en";
+  try{lang=localStorage.getItem("sunly_lang")||"";}catch(e){}
+  if(!lang){const n=(navigator.language||"en").slice(0,2).toLowerCase();lang=["es","pl","de","en"].includes(n)?n:"en";}
+  window.__setLang(lang);
+})();
+
+/* language menu */
+const langBtn=document.getElementById("langBtn"),langMenu=document.getElementById("langMenu");
+langBtn.addEventListener("click",e=>{e.stopPropagation();const o=langMenu.classList.toggle("open");langBtn.setAttribute("aria-expanded",String(o));});
+document.addEventListener("click",()=>{langMenu.classList.remove("open");langBtn.setAttribute("aria-expanded","false");});
+langMenu.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{window.__setLang(b.dataset.lang);langMenu.classList.remove("open");}));
+
+/* lightbox */
+const lb=document.getElementById("lightbox"),lbImg=document.getElementById("lbImg");
+document.querySelectorAll(".zoomable").forEach(img=>img.addEventListener("click",()=>{lbImg.src=img.src;lbImg.alt=img.alt;lb.classList.add("open");}));
+lb.addEventListener("click",()=>lb.classList.remove("open"));
+document.addEventListener("keydown",e=>{if(e.key==="Escape")lb.classList.remove("open");});
+</script>
 </body>
 </html>

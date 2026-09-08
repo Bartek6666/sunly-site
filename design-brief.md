@@ -101,6 +101,34 @@ directions to explore:
 A signature idea worth using: the app's core visual is a **circular "sun chance %" gauge**
 (e.g. "87% — Tenerife, July"). That gauge is a strong, ownable hero motif.
 
+### ✅ CHOSEN direction (based on reference sites the owner likes)
+Clean, light, **product-led** — inspired by modern app-landing templates (a fintech
+"ProFinance / Invest for the Future"-style layout), adapted to Sunly's blue + sun identity.
+**Replace the reference's lime-green accent with Sunly blue `#0052D4` + sun `#FBBF24/#F59E0B`
+everywhere.** Base is white / very light blue.
+
+Layout & structure to follow:
+- **Split hero:** app value proposition + "Get it on Google Play" button on the LEFT; a
+  **phone mockup on the RIGHT** showing the app. Optionally on a soft rounded color panel
+  (sky-blue tint) with a subtle **sun-glow** accent (not a lime blob).
+- **Alternating sections:** text on one side, a phone mockup or floating UI cards on the
+  other. Feature the app's best screens in the mockups — especially the **sun-chance (%)
+  screen** and the **wind screen**.
+- **Floating UI snippets:** lift small real UI elements (e.g. a sun-chance gauge card, a
+  month tile) out over the background for a lively, product-led feel.
+- **Feature / "advantages" grid:** icon + short title + one line, clean 2-column grid.
+- **Dark CTA banner** near the end: rounded **navy `#0F2540`** band — "Get Sunly free" +
+  Google Play button + a phone mockup overlapping.
+- **Big bold closing CTA** before the footer (centered, e.g. "Get the app for free").
+
+Style: generous whitespace, rounded corners, soft shadows, **not overloaded**; bold, tight
+headlines. **Keep Manrope** (it matches the app and gives the same clean, modern, geometric
+feel the owner liked in the reference font). Subtle playful touches allowed (a thin
+hand-drawn connecting line, a soft sun-glow) — but restrained and on-brand.
+
+Screens to feature in mockups (`screens/en/`): `03-result` (sun chance + live weather),
+`05-wind` (wind), `04-stats` (monthly stats), `06-rain`, `01-search`, `02-regions`.
+
 ---
 
 ## 6. Page content (English = source of truth)
